@@ -33,14 +33,14 @@ export const HabitFormPage: React.FC = () => {
       <button
         type="button"
         onClick={() => navigate(returnTo)}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-secondary hover:text-ink transition cursor-pointer min-h-[44px]"
       >
         <ArrowLeft className="w-4 h-4" />
         Back
       </button>
 
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-sm">
-        <h1 className="text-xl font-bold text-white tracking-tight mb-5">
+      <div className="p-6 rounded-3xl bg-surface border border-border shadow-card">
+        <h1 className="text-xl font-bold text-ink tracking-tight mb-5">
           {isEdit ? 'Edit Habit' : 'Create New Habit'}
         </h1>
         <HabitForm

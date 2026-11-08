@@ -51,7 +51,7 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({
       <button
         onClick={handlePrevDay}
         aria-label="Previous day"
-        className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 transition shrink-0 cursor-pointer"
+        className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-ink-secondary hover:text-ink hover:border-border-strong transition shrink-0 cursor-pointer"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
@@ -94,29 +94,30 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({
               data-active={isSelected}
               onClick={() => onSelectDate(dateStr)}
               aria-label={accessibleLabel}
-              className={`min-w-[48px] py-2 px-1.5 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer relative shrink-0 ${
+              aria-current={isSelected ? 'date' : undefined}
+              className={`min-w-[48px] py-2 px-1.5 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer relative shrink-0 border ${
                 isSelected
-                  ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-semibold scale-105'
+                  ? 'bg-accent border-accent text-ink-on-accent shadow-card scale-105'
                   : isToday
-                  ? 'bg-slate-800 text-white border border-emerald-500/40'
-                  : 'bg-slate-900/80 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800/80'
+                  ? 'bg-surface border-accent text-ink'
+                  : 'bg-surface border-border text-ink-secondary hover:border-border-strong hover:text-ink'
               }`}
             >
-              <span className={`text-[11px] uppercase tracking-wider ${isSelected ? 'text-slate-950 font-bold' : 'text-slate-500'}`}>
+              <span className={`text-xs uppercase tracking-wider ${isSelected ? 'text-ink-on-accent font-bold' : 'text-ink-muted'}`}>
                 {dayOfWeekLetter}
               </span>
-              <span className="text-sm font-bold font-mono tabular-nums leading-none mt-1">
+              <span className="text-sm font-bold tabular-nums leading-none mt-1">
                 {dayNumber}
               </span>
 
               {/* Status Indicator Dot */}
               <div className="h-1.5 w-1.5 rounded-full mt-1.5 flex items-center justify-center">
                 {isFrozen ? (
-                  <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-slate-950' : 'bg-sky-400'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-ink-on-accent' : 'bg-info-fill'}`} />
                 ) : isFullyDone ? (
-                  <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-slate-950' : 'bg-emerald-400'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-ink-on-accent' : 'bg-success-fill'}`} />
                 ) : isPartiallyDone ? (
-                  <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-slate-900' : 'bg-amber-400'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-ink-on-accent' : 'bg-warning-fill'}`} />
                 ) : (
                   <span className="w-1 h-1 rounded-full opacity-0" />
                 )}
@@ -129,7 +130,7 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({
       <button
         onClick={handleNextDay}
         aria-label="Next day"
-        className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 transition shrink-0 cursor-pointer"
+        className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-ink-secondary hover:text-ink hover:border-border-strong transition shrink-0 cursor-pointer"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
@@ -137,7 +138,7 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({
       {selectedDate !== todayStr && (
         <button
           onClick={() => onSelectDate(todayStr)}
-          className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg whitespace-nowrap cursor-pointer transition shrink-0"
+          className="text-xs font-semibold text-accent-text hover:text-ink-on-accent hover:bg-accent px-3 py-1.5 bg-accent-soft border border-accent-border rounded-lg whitespace-nowrap cursor-pointer transition shrink-0"
         >
           Today
         </button>

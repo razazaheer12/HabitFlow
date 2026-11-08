@@ -15,7 +15,7 @@ export function triggerStreakCelebration(): void {
       particleCount: 80,
       spread: 70,
       origin: { y: 0.7 },
-      colors: ['#10b981', '#06b6d4', '#3b82f6', '#f59e0b', '#ec4899']
+      colors: ['#B8E65A', '#8CC63F', '#263629', '#E0A43C', '#4E9BC8']
     });
   } catch {
     // Canvas confetti not available
@@ -26,7 +26,7 @@ export function triggerAllCompletedCelebration(): void {
   if (prefersReducedMotion()) return;
   try {
     const end = Date.now() + 1.2 * 1000;
-    const colors = ['#10b981', '#34d399', '#6ee7b7', '#06b6d4'];
+    const colors = ['#B8E65A', '#A5D644', '#8CC63F', '#7CB92E'];
 
     (function frame() {
       confetti({

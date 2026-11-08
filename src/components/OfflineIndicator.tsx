@@ -22,8 +22,8 @@ export const OfflineIndicator: React.FC = () => {
   if (isOnline) return null;
 
   return (
-    <div className="fixed bottom-20 left-4 z-50 flex items-center gap-2 rounded-xl bg-amber-500/90 backdrop-blur-md px-3.5 py-2 text-xs font-semibold text-slate-950 shadow-xl border border-amber-400 animate-in slide-in-from-bottom-2">
-      <WifiOff className="w-4 h-4 text-slate-950" />
+    <div className="fixed bottom-20 md:bottom-6 left-4 right-4 sm:right-auto z-50 flex items-center gap-2 rounded-xl bg-warning-fill px-3.5 py-2.5 text-xs font-semibold text-ink shadow-dropdown border border-warning-border animate-in slide-in-from-bottom-2">
+      <WifiOff className="w-4 h-4 text-ink shrink-0" />
       <span>Offline Mode — All changes safely stored locally</span>
     </div>
   );

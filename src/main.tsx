@@ -3,7 +3,9 @@ import App from './App.tsx';
 import { initServiceWorker } from './pwa/serviceWorker';
 
 // Self-hosted variable fonts (offline-capable, no remote requests).
-import '@fontsource-variable/geist/wght.css';
+// Manrope is the primary UI typeface; JetBrains Mono is retained only for
+// genuinely technical/export grids (e.g. the backup summary).
+import '@fontsource-variable/manrope/wght.css';
 import '@fontsource-variable/jetbrains-mono/wght.css';
 import './index.css';
 

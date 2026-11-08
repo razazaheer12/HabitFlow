@@ -35,32 +35,34 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({
   const strokeDashoffset = circumference - (completionRate / 100) * circumference;
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-5">
       {/* Dynamic Greeting & Actions Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-            <span>{formatDisplayDate(selectedDate, { includeYear: true })}</span>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted">
+            <span className="truncate">{formatDisplayDate(selectedDate, { includeYear: true })}</span>
             <span aria-hidden="true">·</span>
-            <span className="text-emerald-400 font-semibold">{isViewingToday ? 'Live Today' : 'Historical Log'}</span>
+            <span className={isViewingToday ? 'text-accent-text' : 'text-ink-muted'}>
+              {isViewingToday ? 'Live Today' : 'Historical Log'}
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
-            {greeting}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">{userName || 'Friend'}</span>
+          <h1 className="text-[28px] leading-9 sm:text-[32px] sm:leading-10 font-extrabold tracking-[-0.02em] text-ink mt-1.5">
+            {greeting}, {userName || 'Friend'}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">{subtext}</p>
+          <p className="text-sm text-ink-secondary mt-1">{subtext}</p>
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={onOpenFreezeModal}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition cursor-pointer min-h-[44px] ${
               isHolidayMode
-                ? 'bg-sky-500/15 border-sky-500/40 text-sky-300'
-                : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700 hover:text-white'
+                ? 'bg-info-bg border-info-border text-info hover:border-info-fill'
+                : 'bg-surface border-border text-ink-secondary hover:border-border-strong hover:text-ink'
             }`}
             title="Streak Freeze & Holiday Protection"
           >
-            <ShieldAlert className="w-3.5 h-3.5 text-sky-400" />
+            <ShieldAlert className={`w-4 h-4 ${isHolidayMode ? 'text-info-fill' : 'text-ink-muted'}`} />
             <span>{isHolidayMode ? 'Holiday Mode' : 'Streak Freeze'}</span>
           </button>
         </div>
@@ -69,13 +71,13 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
         {/* Stat 1: Today's Completion Rate */}
-        <div className="p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800/80 flex items-center justify-between">
+        <div className="p-3 sm:p-4 rounded-2xl bg-surface border border-border shadow-card flex items-center justify-between">
           <div className="space-y-0.5 min-w-0">
-            <span className="text-[11px] sm:text-xs font-medium text-slate-400 block truncate">Completion</span>
-            <div className="text-lg sm:text-2xl font-bold font-mono text-white tabular-nums">
+            <span className="text-xs font-medium text-ink-secondary block truncate">Completion</span>
+            <div className="text-xl sm:text-[28px] sm:leading-9 font-extrabold text-ink tabular-nums">
               {completionRate}%
             </div>
-            <span className="text-[11px] text-slate-500 hidden sm:block">
+            <span className="text-xs text-ink-muted hidden sm:block">
               {completedTodayCount} of {dueTodayCount} due
             </span>
           </div>
@@ -86,55 +88,55 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({
                 cx="30"
                 cy="30"
                 r={radius}
-                className="stroke-slate-800"
-                strokeWidth="4.5"
+                className="stroke-bg-secondary"
+                strokeWidth="5"
                 fill="none"
               />
               <circle
                 cx="30"
                 cy="30"
                 r={radius}
-                className="stroke-emerald-400 transition-all duration-500 ease-out"
-                strokeWidth="4.5"
+                className="stroke-success-fill transition-all duration-500 ease-out"
+                strokeWidth="5"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
                 fill="none"
               />
             </svg>
-            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 absolute" />
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success-fill absolute" />
           </div>
         </div>
 
         {/* Stat 2: Current Streak */}
-        <div className="p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800/80 flex items-center justify-between">
+        <div className="p-3 sm:p-4 rounded-2xl bg-surface border border-border shadow-card flex items-center justify-between">
           <div className="space-y-0.5 min-w-0">
-            <span className="text-[11px] sm:text-xs font-medium text-slate-400 block truncate">Streak</span>
-            <div className="text-lg sm:text-2xl font-bold font-mono text-white tabular-nums flex items-center gap-1">
+            <span className="text-xs font-medium text-ink-secondary block truncate">Streak</span>
+            <div className="text-xl sm:text-[28px] sm:leading-9 font-extrabold text-ink tabular-nums flex items-baseline gap-1">
               <span>{currentStreak}</span>
-              <span className="text-xs font-normal text-slate-500">d</span>
+              <span className="text-xs font-medium text-ink-muted">d</span>
             </div>
-            <span className="text-[11px] text-amber-400/90 font-medium hidden sm:block truncate">
+            <span className="text-xs text-warning font-medium hidden sm:block truncate">
               {currentStreak > 0 ? 'Active streak' : 'Ready'}
             </span>
           </div>
 
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
-            <Flame className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-400/20" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-warning-bg border border-warning-border flex items-center justify-center text-warning-fill shrink-0">
+            <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
         {/* Stat 3: Active Habits */}
-        <div className="p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800/80 flex items-center justify-between">
+        <div className="p-3 sm:p-4 rounded-2xl bg-surface border border-border shadow-card flex items-center justify-between">
           <div className="space-y-0.5 min-w-0">
-            <span className="text-[11px] sm:text-xs font-medium text-slate-400 block truncate">Habits</span>
-            <div className="text-lg sm:text-2xl font-bold font-mono text-white tabular-nums">
+            <span className="text-xs font-medium text-ink-secondary block truncate">Habits</span>
+            <div className="text-xl sm:text-[28px] sm:leading-9 font-extrabold text-ink tabular-nums">
               {activeHabitsCount}
             </div>
-            <span className="text-[11px] text-slate-500 hidden sm:block truncate">Active routine</span>
+            <span className="text-xs text-ink-muted hidden sm:block truncate">Active routine</span>
           </div>
 
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent-soft border border-accent-border flex items-center justify-center text-accent-text shrink-0">
             <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>

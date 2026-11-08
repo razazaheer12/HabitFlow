@@ -66,7 +66,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm"
       onClick={onCancel}
     >
       <div
@@ -76,23 +76,23 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-desc"
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-in fade-in zoom-in-95"
+        className="w-full max-w-sm bg-surface border border-border rounded-3xl p-6 shadow-modal animate-in fade-in zoom-in-95"
       >
         <div className="flex items-start gap-3.5">
           <div
             className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${
               variant === 'danger'
-                ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
-                : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                ? 'bg-error-bg border-error-border text-error-fill'
+                : 'bg-accent-soft border-accent-border text-accent-text'
             }`}
           >
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <h3 id="confirm-dialog-title" className="text-base font-bold text-white tracking-tight">
+            <h3 id="confirm-dialog-title" className="text-base font-bold text-ink tracking-tight">
               {title}
             </h3>
-            <div id="confirm-dialog-desc" className="text-sm text-slate-400 mt-1.5 leading-relaxed space-y-1.5">
+            <div id="confirm-dialog-desc" className="text-sm text-ink-secondary mt-1.5 leading-relaxed space-y-1.5">
               {description}
             </div>
           </div>
@@ -103,17 +103,17 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             ref={cancelRef}
             type="button"
             onClick={onCancel}
-            className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition cursor-pointer"
+            className="flex-1 py-2.5 min-h-[44px] rounded-xl bg-bg-secondary hover:bg-border text-ink-secondary hover:text-ink text-sm font-semibold transition cursor-pointer"
           >
             {cancelLabel}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold shadow-md transition cursor-pointer ${
+            className={`flex-1 py-2.5 min-h-[44px] rounded-xl text-sm font-semibold shadow-card active:scale-[0.98] transition cursor-pointer ${
               variant === 'danger'
-                ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/20'
-                : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20'
+                ? 'bg-error hover:brightness-110 text-white'
+                : 'bg-accent hover:bg-accent-hover text-ink-on-accent'
             }`}
           >
             {confirmLabel}

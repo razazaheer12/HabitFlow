@@ -1,27 +1,146 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* ============================================================================
+   HabitFlow — Phase 3 "Premium Light" Design System
+   ----------------------------------------------------------------------------
+   Premium Light is the ONLY supported theme. There is no dark mode, no theme
+   switcher and no automatic system-theme switching. Every color, radius,
+   shadow and font token used across the app is declared here as a semantic
+   custom property so components never hard-code raw HEX values.
+
+   Source of truth: PHASE_3_STAGE_1_DESIGN_FOUNDATION.md (Sections 5–7).
+   Accessibility rule: the lime accent #B8E65A is a FILL only — never text on
+   white. Text on lime uses ink #20251F (9.71:1). Colored green text uses
+   accent-text #3F6B12 (5.35:1). ink-muted #777E75 is large/decorative only.
+   ============================================================================ */
 
 @theme {
-  /* Typography — self-hosted variable fonts (see src/main.tsx) */
-  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* ---- Typography: self-hosted variable fonts (see src/main.tsx) ---- */
+  --font-sans: 'Manrope Variable', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* Mono is retained ONLY for genuinely technical / export grids (backup). */
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Surface hierarchy: background -> surface -> elevated -> interactive.
-     These extend the slate scale so every screen shares one visual language. */
-  --color-surface-base: #020617;        /* slate-950 — app background */
-  --color-surface: #0f172a;             /* slate-900 — cards / panels */
-  --color-surface-elevated: #172033;    /* between slate-800/900 — raised surfaces */
-  --color-surface-interactive: #1e293b; /* slate-800 — hover / controls */
+  /* ---- Backgrounds & surfaces ---- */
+  --color-bg: #F8F9F5;                 /* warm paper page background */
+  --color-bg-secondary: #F1F3ED;       /* section bands, inset tracks, disabled fills */
+  --color-surface: #FFFFFF;            /* cards, panels, modals, inputs */
+  --color-surface-elevated: #FFFFFF;   /* raised cards/dropdowns (shadow-differentiated) */
 
-  /* Fill the gaps in the slate ramp used across the UI (were previously
-     invalid classes: bg-slate-850, hover:bg-slate-750). */
-  --color-slate-750: #293548;
-  --color-slate-850: #172033;
+  /* ---- Ink / text ramp ---- */
+  --color-ink: #20251F;                /* headings, primary text, ink-on-lime (AAA) */
+  --color-ink-secondary: #5F655C;      /* body, labels, secondary text (AA) */
+  --color-ink-muted: #777E75;          /* large/decorative captions ONLY (AA-large) */
+  --color-ink-on-accent: #20251F;      /* text/icons on lime fills */
+  --color-accent-text: #3F6B12;        /* accessible green text / links */
 
-  /* Motion tokens (Tailwind v4 generates animate-* utilities from these) */
+  /* ---- Accent (lime) ---- */
+  --color-accent: #B8E65A;             /* primary action fill / selection / achievement */
+  --color-accent-hover: #A5D644;       /* hover on accent fills */
+  --color-accent-soft: #F1F8E5;        /* soft highlight bg, success tint, active nav tint */
+  --color-accent-border: #CDE8A0;      /* borders on accent-soft surfaces */
+  --color-forest: #263629;             /* deep brand green: focus rings, dark icon chips */
+
+  /* ---- Borders, focus & selection ---- */
+  --color-border: #E8EBE3;             /* default card/panel/input borders, dividers */
+  --color-border-strong: #D8DDD0;      /* input borders, hovered borders, control outlines */
+  --color-focus: #263629;              /* focus ring (2px solid, offset 2px) */
+  --color-selection-bg: #E4F5C4;       /* text selection background */
+  --color-selection-ink: #20251F;      /* text selection foreground */
+
+  /* ---- Semantic state families (ink / bg / border / fill) ---- */
+  --color-success: #3F6B12;
+  --color-success-bg: #F1F8E5;
+  --color-success-border: #CDE8A0;
+  --color-success-fill: #8CC63F;
+
+  --color-warning: #8A5A00;
+  --color-warning-bg: #FBF1DE;
+  --color-warning-border: #F0DCB8;
+  --color-warning-fill: #E0A43C;
+
+  --color-error: #B42318;
+  --color-error-bg: #FDECEA;
+  --color-error-border: #F5C6C0;
+  --color-error-fill: #E0655C;
+
+  --color-info: #175E88;
+  --color-info-bg: #E7F2F9;
+  --color-info-border: #BBDCEE;
+  --color-info-fill: #4E9BC8;
+
+  --color-neutral: #5F655C;
+  --color-neutral-bg: #F1F3ED;
+  --color-neutral-border: #E8EBE3;
+  --color-neutral-fill: #A8AEA4;
+
+  --color-disabled: #A8AEA4;
+  --color-disabled-bg: #F1F3ED;
+  --color-disabled-border: #E8EBE3;
+
+  /* ---- Category palette (pastel, harmonized to lime) ---- */
+  --color-cat-fitness-bg: #FDF0DC;
+  --color-cat-fitness-ink: #8A5A00;
+  --color-cat-fitness-icon: #C77E14;
+  --color-cat-fitness-border: #F3DFC0;
+  --color-cat-fitness-progress: #E0A43C;
+
+  --color-cat-mind-bg: #E7F1FA;
+  --color-cat-mind-ink: #175E88;
+  --color-cat-mind-icon: #2E7FB0;
+  --color-cat-mind-border: #CFE3F2;
+  --color-cat-mind-progress: #4E9BC8;
+
+  --color-cat-productivity-bg: #F1F8E5;
+  --color-cat-productivity-ink: #3F6B12;
+  --color-cat-productivity-icon: #6FA32B;
+  --color-cat-productivity-border: #DDEEC4;
+  --color-cat-productivity-progress: #8CC63F;
+
+  --color-cat-learning-bg: #ECEBFA;
+  --color-cat-learning-ink: #4A3F9F;
+  --color-cat-learning-icon: #6A5FD0;
+  --color-cat-learning-border: #DCD9F2;
+  --color-cat-learning-progress: #7A6FE0;
+
+  --color-cat-health-bg: #FDECEC;
+  --color-cat-health-ink: #B42318;
+  --color-cat-health-icon: #D2554C;
+  --color-cat-health-border: #F6D5D2;
+  --color-cat-health-progress: #E0655C;
+
+  /* ---- Analytics heatmap intensity ramp (0 → 100%) ---- */
+  --color-heat-0: #F1F3ED;
+  --color-heat-1: #E9F5D3;
+  --color-heat-2: #CDE8A0;
+  --color-heat-3: #A9D95C;
+  --color-heat-4: #7CB92E;
+  --color-heat-frozen: #CFE3F2;
+  --color-heat-frozen-border: #9CC6E0;
+  --color-heat-rest: #E8EBE3;
+  --color-heat-missed: #F6D5D2;
+
+  /* ---- Radii (map to Tailwind's default rounded-* scale) ----
+     chips/badges 8 (rounded-lg) · controls/inputs 12 (rounded-xl) ·
+     cards 16 (rounded-2xl) · panels 20 (rounded-[20px]) · modals 24
+     (rounded-3xl). Custom tokens below document the system explicitly. */
+  --radius-chip: 8px;
+  --radius-checkbox: 10px;
+  --radius-control: 12px;
+  --radius-card: 16px;
+  --radius-panel: 20px;
+  --radius-modal: 24px;
+
+  /* ---- Shadows (soft, warm-tinted — never black glows) ---- */
+  --shadow-card: 0 1px 2px rgba(32, 37, 31, 0.04), 0 1px 3px rgba(32, 37, 31, 0.06);
+  --shadow-elevated: 0 2px 6px rgba(32, 37, 31, 0.06), 0 4px 12px rgba(32, 37, 31, 0.06);
+  --shadow-dropdown: 0 4px 8px rgba(32, 37, 31, 0.08), 0 12px 24px rgba(32, 37, 31, 0.10);
+  --shadow-modal: 0 8px 16px rgba(32, 37, 31, 0.10), 0 24px 48px rgba(32, 37, 31, 0.14);
+
+  /* ---- Motion tokens (Tailwind v4 generates animate-* utilities) ---- */
   --animate-in: hf-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-rise: hf-rise 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-pop: hf-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Enter animation: composed via the fade-in / zoom-in-* / slide-in-* utilities
@@ -47,6 +166,13 @@
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
+}
+
+/* Subtle completion "pop" for the habit checkbox (150ms scale). */
+@keyframes hf-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.12); }
+  100% { transform: scale(1); }
 }
 
 /* Composable enter-state utilities (replaces the unavailable
@@ -76,6 +202,10 @@
 }
 
 @layer base {
+  html {
+    background-color: var(--color-bg);
+  }
+
   html, body {
     font-family: var(--font-sans);
     -webkit-tap-highlight-color: transparent;
@@ -83,20 +213,40 @@
     word-spacing: normal;
   }
 
-  /* Custom scrollbars */
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Consistent, high-contrast keyboard focus everywhere (WCAG 2.4.11). */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Text selection uses the approved lime-soft highlight. */
+  ::selection {
+    background-color: var(--color-selection-bg);
+    color: var(--color-selection-ink);
+  }
+
+  /* Custom scrollbars — warm neutral instead of the retired slate glaze. */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.2);
+    background: rgba(32, 37, 31, 0.16);
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(148, 163, 184, 0.4);
+    background: rgba(32, 37, 31, 0.28);
   }
 }
 

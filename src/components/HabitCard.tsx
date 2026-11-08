@@ -17,7 +17,7 @@ import {
   Plus,
   Moon
 } from 'lucide-react';
-import { Habit, HabitLog, JournalNote, StreakFreeze, CATEGORIES, DailyStatus } from '../types';
+import { Habit, HabitCategory, HabitLog, JournalNote, StreakFreeze, CATEGORIES, DailyStatus } from '../types';
 import { calculateHabitStreak, isHabitCompleted, isHabitFrozen, resolveHabitDailyStatus } from '../domain/streak';
 import { isPlannedRestDay } from '../domain/schedule';
 
@@ -34,6 +34,22 @@ interface HabitCardProps {
   onArchiveHabit: (habitId: string) => void;
   onDeleteHabit: (habitId: string) => void;
 }
+
+/* Pastel category chips + icon colors (Section 5.6 of the design foundation). */
+const CAT_CHIP: Record<HabitCategory, string> = {
+  fitness: 'bg-cat-fitness-bg text-cat-fitness-ink border-cat-fitness-border',
+  mind: 'bg-cat-mind-bg text-cat-mind-ink border-cat-mind-border',
+  productivity: 'bg-cat-productivity-bg text-cat-productivity-ink border-cat-productivity-border',
+  learning: 'bg-cat-learning-bg text-cat-learning-ink border-cat-learning-border',
+  health: 'bg-cat-health-bg text-cat-health-ink border-cat-health-border'
+};
+const CAT_ICON: Record<HabitCategory, string> = {
+  fitness: 'text-cat-fitness-icon',
+  mind: 'text-cat-mind-icon',
+  productivity: 'text-cat-productivity-icon',
+  learning: 'text-cat-learning-icon',
+  health: 'text-cat-health-icon'
+};
 
 export const HabitCard: React.FC<HabitCardProps> = ({
   habit,
@@ -61,19 +77,20 @@ export const HabitCard: React.FC<HabitCardProps> = ({
   const cat = CATEGORIES[habit.category];
 
   const renderCategoryIcon = () => {
+    const cls = `w-3.5 h-3.5 ${CAT_ICON[habit.category]}`;
     switch (habit.category) {
       case 'fitness':
-        return <Dumbbell className="w-3.5 h-3.5 text-amber-400" />;
+        return <Dumbbell className={cls} />;
       case 'mind':
-        return <Brain className="w-3.5 h-3.5 text-sky-400" />;
+        return <Brain className={cls} />;
       case 'productivity':
-        return <Zap className="w-3.5 h-3.5 text-emerald-400" />;
+        return <Zap className={cls} />;
       case 'learning':
-        return <BookOpen className="w-3.5 h-3.5 text-indigo-400" />;
+        return <BookOpen className={cls} />;
       case 'health':
-        return <HeartPulse className="w-3.5 h-3.5 text-rose-400" />;
+        return <HeartPulse className={cls} />;
       default:
-        return <Zap className="w-3.5 h-3.5 text-slate-400" />;
+        return <Zap className="w-3.5 h-3.5 text-ink-muted" />;
     }
   };
 
@@ -84,16 +101,18 @@ export const HabitCard: React.FC<HabitCardProps> = ({
 
   return (
     <div
-      className={`group relative rounded-2xl border transition-all duration-200 ${
+      className={`group relative rounded-2xl border shadow-card transition-all duration-200 hover:shadow-elevated ${
+        habit.archived ? 'opacity-60 ' : ''
+      }${
         isCompleted
-          ? 'bg-slate-900/60 border-emerald-500/30'
+          ? 'bg-accent-soft border-accent-border'
           : isFrozen
-          ? 'bg-slate-900/40 border-sky-500/30'
+          ? 'bg-info-bg border-info-border'
           : isRest
-          ? 'bg-slate-900/30 border-slate-800/60'
+          ? 'bg-neutral-bg border-border'
           : status === 'missed'
-          ? 'bg-slate-900/80 border-amber-500/20'
-          : 'bg-slate-900/90 border-slate-800 hover:border-slate-700 shadow-sm'
+          ? 'bg-warning-bg border-warning-border'
+          : 'bg-surface border-border hover:border-border-strong'
       }`}
     >
       <div className="p-3.5 sm:p-4 flex items-start gap-3.5">
@@ -102,26 +121,29 @@ export const HabitCard: React.FC<HabitCardProps> = ({
           type="button"
           onClick={handleCheckboxClick}
           aria-label={`Mark ${habit.title} as ${isCompleted ? 'incomplete' : 'complete'}`}
-          className="min-w-[44px] min-h-[44px] flex items-center justify-center shrink-0 -m-2 cursor-pointer focus:outline-none"
+          aria-pressed={isCompleted}
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center shrink-0 -m-2 cursor-pointer"
         >
           <div
-            className={`w-7 h-7 rounded-xl flex items-center justify-center border-2 transition-all duration-200 ${
+            className={`w-7 h-7 rounded-[10px] flex items-center justify-center border-2 transition-all duration-150 ${
               isCompleted
-                ? 'bg-emerald-500 border-emerald-500 text-slate-950 scale-105 shadow-md shadow-emerald-500/25'
+                ? 'bg-accent border-accent text-ink-on-accent animate-pop'
                 : isFrozen
-                ? 'bg-sky-500/10 border-sky-500/40 text-sky-400'
+                ? 'bg-info-bg border-info-border text-info-fill'
                 : isRest
-                ? 'border-slate-700 bg-slate-800/40 text-slate-500'
-                : 'border-slate-600 bg-slate-800/60 group-hover:border-slate-500 hover:scale-105'
+                ? 'bg-neutral-bg border-border text-ink-muted'
+                : 'bg-surface border-border-strong text-transparent group-hover:border-ink-muted hover:scale-105'
             }`}
           >
             {isCompleted ? (
-              <Check className="w-4 h-4 stroke-[3]" />
+              <Check className="w-4 h-4" strokeWidth={3} />
             ) : isFrozen ? (
               <ShieldAlert className="w-4 h-4" />
             ) : isRest ? (
               <Moon className="w-3.5 h-3.5" />
-            ) : null}
+            ) : (
+              <Check className="w-4 h-4" strokeWidth={3} />
+            )}
           </div>
         </button>
 
@@ -132,15 +154,15 @@ export const HabitCard: React.FC<HabitCardProps> = ({
               <span
                 className={`text-sm font-semibold transition ${
                   isCompleted
-                    ? 'text-slate-400 line-through decoration-slate-600'
-                    : 'text-white'
+                    ? 'text-ink-secondary line-through decoration-border-strong'
+                    : 'text-ink'
                 }`}
               >
                 {habit.title}
               </span>
 
               {habit.targetUnit && (
-                <span className="text-[11px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700/50 shrink-0">
+                <span className="text-xs font-medium text-ink-secondary bg-bg-secondary px-2 py-0.5 rounded-md border border-border shrink-0">
                   {habit.targetUnit}
                 </span>
               )}
@@ -150,12 +172,12 @@ export const HabitCard: React.FC<HabitCardProps> = ({
             <div className="flex items-center gap-1.5 shrink-0 ml-1">
               {streak.currentStreak > 0 && (
                 <div
-                  className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold font-mono tabular-nums"
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-warning-bg border border-warning-border text-warning text-xs font-semibold tabular-nums"
                   title={`${streak.currentStreak} ${streak.streakUnit} streak (${streak.longestStreak} best)`}
                 >
-                  <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
+                  <Flame className="w-3.5 h-3.5 text-warning-fill" />
                   <span>{streak.currentStreak}</span>
-                  <span className="text-[11px] text-amber-400/70 font-normal">{streak.streakUnit === 'weeks' ? 'w' : 'd'}</span>
+                  <span className="text-xs text-warning font-normal">{streak.streakUnit === 'weeks' ? 'w' : 'd'}</span>
                 </div>
               )}
 
@@ -164,73 +186,81 @@ export const HabitCard: React.FC<HabitCardProps> = ({
                   type="button"
                   onClick={() => setShowMenu((prev) => !prev)}
                   aria-label="Habit options"
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                  aria-expanded={showMenu}
+                  aria-haspopup="menu"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-muted hover:text-ink hover:bg-bg-secondary transition cursor-pointer"
                 >
                   <MoreVertical className="w-4 h-4" />
                 </button>
 
                 {showMenu && (
                   <div
-                    className="absolute right-0 top-9 z-30 w-48 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl py-1 text-xs animate-in fade-in zoom-in-95"
+                    role="menu"
+                    className="absolute right-0 top-9 z-30 w-48 rounded-xl bg-surface border border-border shadow-dropdown py-1 text-xs animate-in fade-in zoom-in-95"
                     onMouseLeave={() => setShowMenu(false)}
                   >
                     <button
                       type="button"
+                      role="menuitem"
                       onClick={() => {
                         setShowMenu(false);
                         onOpenNoteModal(habit, selectedDate, journalEntry?.note);
                       }}
-                      className="w-full px-3 py-2 text-left text-slate-200 hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-2 text-left text-ink-secondary hover:bg-bg-secondary hover:text-ink flex items-center gap-2 cursor-pointer transition-colors"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
+                      <MessageSquare className="w-3.5 h-3.5 text-accent-text" />
                       <span>{journalEntry?.note ? 'Edit Daily Note' : 'Add Daily Note'}</span>
                     </button>
 
                     <button
                       type="button"
+                      role="menuitem"
                       onClick={() => {
                         setShowMenu(false);
                         onToggleHabitFreeze(habit.id, selectedDate);
                       }}
-                      className="w-full px-3 py-2 text-left text-slate-200 hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-2 text-left text-ink-secondary hover:bg-bg-secondary hover:text-ink flex items-center gap-2 cursor-pointer transition-colors"
                     >
-                      <ShieldAlert className="w-3.5 h-3.5 text-sky-400" />
+                      <ShieldAlert className="w-3.5 h-3.5 text-info-fill" />
                       <span>{isFrozen ? 'Unfreeze Day' : 'Freeze / Skip Day'}</span>
                     </button>
 
                     <button
                       type="button"
+                      role="menuitem"
                       onClick={() => {
                         setShowMenu(false);
                         onEditHabit(habit);
                       }}
-                      className="w-full px-3 py-2 text-left text-slate-200 hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-2 text-left text-ink-secondary hover:bg-bg-secondary hover:text-ink flex items-center gap-2 cursor-pointer transition-colors"
                     >
-                      <Edit2 className="w-3.5 h-3.5 text-slate-400" />
+                      <Edit2 className="w-3.5 h-3.5 text-ink-muted" />
                       <span>Edit Habit</span>
                     </button>
 
                     <button
                       type="button"
+                      role="menuitem"
                       onClick={() => {
                         setShowMenu(false);
                         onArchiveHabit(habit.id);
                       }}
-                      className="w-full px-3 py-2 text-left text-slate-200 hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-2 text-left text-ink-secondary hover:bg-bg-secondary hover:text-ink flex items-center gap-2 cursor-pointer transition-colors"
                     >
-                      <Archive className="w-3.5 h-3.5 text-amber-400" />
+                      <Archive className="w-3.5 h-3.5 text-warning-fill" />
                       <span>{habit.archived ? 'Restore Habit' : 'Archive Habit'}</span>
                     </button>
 
-                    <div className="h-px bg-slate-800 my-1" />
+                    <div className="h-px bg-border my-1" />
 
                     <button
                       type="button"
+                      role="menuitem"
                       onClick={() => {
                         setShowMenu(false);
                         onDeleteHabit(habit.id);
                       }}
-                      className="w-full px-3 py-2 text-left text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-2 text-left text-error hover:bg-error-bg flex items-center gap-2 cursor-pointer transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Delete Habit</span>
@@ -242,17 +272,17 @@ export const HabitCard: React.FC<HabitCardProps> = ({
           </div>
 
           {/* Distinguishable Daily Status & Category Row */}
-          <div className="flex items-center gap-2 text-xs text-slate-400 mt-1.5 flex-wrap">
-            <span className="flex items-center gap-1 text-slate-300">
+          <div className="flex items-center gap-2 text-xs mt-2 flex-wrap">
+            <span className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border font-medium ${CAT_CHIP[habit.category]}`}>
               {renderCategoryIcon()}
               <span>{cat.name}</span>
             </span>
 
             {habit.reminderTime && (
               <>
-                <span aria-hidden="true" className="text-slate-600">·</span>
-                <span className="flex items-center gap-1 text-slate-400 font-mono">
-                  <Clock className="w-3 h-3 text-slate-500" />
+                <span aria-hidden="true" className="text-border-strong">·</span>
+                <span className="flex items-center gap-1 text-ink-muted tabular-nums">
+                  <Clock className="w-3 h-3" />
                   <span>{habit.reminderTime}</span>
                 </span>
               </>
@@ -261,8 +291,8 @@ export const HabitCard: React.FC<HabitCardProps> = ({
             {/* Distinguishable 4-State Badges */}
             {isFrozen && (
               <>
-                <span aria-hidden="true" className="text-slate-600">·</span>
-                <span className="text-sky-300 font-medium bg-sky-500/10 px-1.5 py-0.5 rounded border border-sky-500/20 text-[11px]">
+                <span aria-hidden="true" className="text-border-strong">·</span>
+                <span className="text-info bg-info-bg px-1.5 py-0.5 rounded border border-info-border text-xs font-medium">
                   Streak Frozen
                 </span>
               </>
@@ -270,8 +300,8 @@ export const HabitCard: React.FC<HabitCardProps> = ({
 
             {isRest && !isCompleted && !isFrozen && (
               <>
-                <span aria-hidden="true" className="text-slate-600">·</span>
-                <span className="text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded text-[11px]">
+                <span aria-hidden="true" className="text-border-strong">·</span>
+                <span className="text-ink-secondary bg-neutral-bg px-1.5 py-0.5 rounded border border-border text-xs font-medium">
                   Planned Rest
                 </span>
               </>
@@ -279,8 +309,8 @@ export const HabitCard: React.FC<HabitCardProps> = ({
 
             {status === 'missed' && (
               <>
-                <span aria-hidden="true" className="text-slate-600">·</span>
-                <span className="text-amber-400/90 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20 text-[11px]">
+                <span aria-hidden="true" className="text-border-strong">·</span>
+                <span className="text-warning bg-warning-bg px-1.5 py-0.5 rounded border border-warning-border text-xs font-medium">
                   Missed
                 </span>
               </>
@@ -288,24 +318,24 @@ export const HabitCard: React.FC<HabitCardProps> = ({
           </div>
 
           {/* Micro-Journaling Note Display or Add Button */}
-          <div className="mt-2.5 pt-2 border-t border-slate-800/60">
+          <div className="mt-2.5 pt-2 border-t border-border">
             {journalEntry?.note ? (
               <div
                 onClick={() => onOpenNoteModal(habit, selectedDate, journalEntry.note)}
-                className="flex items-start gap-2 p-2 rounded-xl bg-slate-800/50 hover:bg-slate-800 border border-slate-700/40 text-xs text-slate-300 cursor-pointer transition"
+                className="flex items-start gap-2 p-2 rounded-xl bg-bg-secondary hover:bg-border/50 border border-border text-xs text-ink-secondary cursor-pointer transition"
                 title="Click to edit or delete daily note"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                <MessageSquare className="w-3.5 h-3.5 text-accent-text shrink-0 mt-0.5" />
                 <span className="italic flex-1 break-words">"{journalEntry.note}"</span>
-                <Edit2 className="w-3 h-3 text-slate-500 opacity-60 hover:opacity-100 shrink-0 ml-1" />
+                <Edit2 className="w-3 h-3 text-ink-muted opacity-70 hover:opacity-100 shrink-0 ml-1" />
               </div>
             ) : (
               <button
                 type="button"
                 onClick={() => onOpenNoteModal(habit, selectedDate)}
-                className="inline-flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-emerald-300 transition cursor-pointer py-1"
+                className="inline-flex items-center gap-1.5 text-xs text-ink-muted hover:text-accent-text transition cursor-pointer py-1"
               >
-                <Plus className="w-3 h-3 text-slate-500" />
+                <Plus className="w-3 h-3" />
                 <span>Add 1-line daily note</span>
               </button>
             )}

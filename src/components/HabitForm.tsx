@@ -21,6 +21,21 @@ const DAYS_OF_WEEK = [
   { label: 'Sat', value: 6 }
 ];
 
+/* Pastel chip treatment for a selected category (Section 5.6). */
+const CAT_SELECTED: Record<HabitCategory, string> = {
+  fitness: 'bg-cat-fitness-bg text-cat-fitness-ink border-cat-fitness-border',
+  mind: 'bg-cat-mind-bg text-cat-mind-ink border-cat-mind-border',
+  productivity: 'bg-cat-productivity-bg text-cat-productivity-ink border-cat-productivity-border',
+  learning: 'bg-cat-learning-bg text-cat-learning-ink border-cat-learning-border',
+  health: 'bg-cat-health-bg text-cat-health-ink border-cat-health-border'
+};
+
+const INPUT_CLASS =
+  'w-full px-4 py-2.5 rounded-xl bg-surface border border-border-strong text-ink placeholder-ink-muted focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 text-sm transition';
+
+const SEGMENT_ACTIVE = 'bg-accent text-ink-on-accent shadow-card font-semibold';
+const SEGMENT_IDLE = 'text-ink-secondary hover:text-ink';
+
 /**
  * The single source of truth for habit create/edit fields and validation.
  * Rendered inside the quick-add dialog AND the dedicated /habits/new and
@@ -101,14 +116,14 @@ export const HabitForm: React.FC<HabitFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div role="alert" className="p-3 text-xs rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
+        <div role="alert" className="p-3 text-xs rounded-xl bg-error-bg border border-error-border text-error font-medium">
           {error}
         </div>
       )}
 
       {/* Title */}
       <div className="space-y-1.5">
-        <label htmlFor="habit-name-input" className="text-xs font-semibold text-slate-300 block">
+        <label htmlFor="habit-name-input" className="text-xs font-semibold text-ink-secondary block">
           Habit Name
         </label>
         <input
@@ -122,13 +137,13 @@ export const HabitForm: React.FC<HabitFormProps> = ({
             setTitle(e.target.value);
             if (error) setError('');
           }}
-          className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm transition"
+          className={INPUT_CLASS}
         />
       </div>
 
       {/* Category Selector */}
       <div className="space-y-2">
-        <label className="text-xs font-semibold text-slate-300 block">Category</label>
+        <label className="text-xs font-semibold text-ink-secondary block">Category</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {(Object.keys(CATEGORIES) as HabitCategory[]).map((catKey) => {
             const info = CATEGORIES[catKey];
@@ -138,10 +153,11 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                 key={catKey}
                 type="button"
                 onClick={() => setCategory(catKey)}
-                className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                aria-pressed={isSelected}
+                className={`flex items-center gap-2 p-2.5 min-h-[44px] rounded-xl border text-left transition cursor-pointer ${
                   isSelected
-                    ? 'bg-slate-800 border-emerald-500 text-white shadow-sm'
-                    : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                    ? `${CAT_SELECTED[catKey]} font-semibold shadow-card`
+                    : 'bg-surface border-border text-ink-secondary hover:border-border-strong hover:text-ink'
                 }`}
               >
                 <span className="text-sm font-medium">{info.name}</span>
@@ -153,15 +169,13 @@ export const HabitForm: React.FC<HabitFormProps> = ({
 
       {/* Scheduling Rules */}
       <div className="space-y-2">
-        <label className="text-xs font-semibold text-slate-300 block">Schedule Rule</label>
-        <div className="flex rounded-xl bg-slate-800/80 p-1 border border-slate-700/60">
+        <label className="text-xs font-semibold text-ink-secondary block">Schedule Rule</label>
+        <div className="flex rounded-xl bg-bg-secondary p-1 border border-border">
           <button
             type="button"
             onClick={() => setScheduleType('daily')}
-            className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer ${
-              scheduleType === 'daily'
-                ? 'bg-emerald-500 text-slate-950 shadow-sm font-semibold'
-                : 'text-slate-400 hover:text-white'
+            className={`flex-1 py-1.5 text-xs rounded-lg transition cursor-pointer ${
+              scheduleType === 'daily' ? SEGMENT_ACTIVE : SEGMENT_IDLE
             }`}
           >
             Every Day
@@ -169,10 +183,8 @@ export const HabitForm: React.FC<HabitFormProps> = ({
           <button
             type="button"
             onClick={() => setScheduleType('specific_days')}
-            className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer ${
-              scheduleType === 'specific_days'
-                ? 'bg-emerald-500 text-slate-950 shadow-sm font-semibold'
-                : 'text-slate-400 hover:text-white'
+            className={`flex-1 py-1.5 text-xs rounded-lg transition cursor-pointer ${
+              scheduleType === 'specific_days' ? SEGMENT_ACTIVE : SEGMENT_IDLE
             }`}
           >
             Selected Days
@@ -180,10 +192,8 @@ export const HabitForm: React.FC<HabitFormProps> = ({
           <button
             type="button"
             onClick={() => setScheduleType('times_per_week')}
-            className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer ${
-              scheduleType === 'times_per_week'
-                ? 'bg-emerald-500 text-slate-950 shadow-sm font-semibold'
-                : 'text-slate-400 hover:text-white'
+            className={`flex-1 py-1.5 text-xs rounded-lg transition cursor-pointer ${
+              scheduleType === 'times_per_week' ? SEGMENT_ACTIVE : SEGMENT_IDLE
             }`}
           >
             Weekly Target
@@ -192,7 +202,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
 
         {scheduleType === 'specific_days' && (
           <div className="space-y-1.5 pt-1">
-            <span className="text-[11px] text-slate-400 block">
+            <span className="text-xs text-ink-secondary block">
               Other days will be planned rest days (won't count as missed).
             </span>
             <div className="flex gap-1.5">
@@ -203,10 +213,11 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                     key={d.value}
                     type="button"
                     onClick={() => toggleDay(d.value)}
-                    className={`flex-1 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                    aria-pressed={isChecked}
+                    className={`flex-1 py-2 rounded-full text-xs font-semibold transition cursor-pointer border ${
                       isChecked
-                        ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-300'
-                        : 'bg-slate-800/60 border border-slate-700 text-slate-400 hover:text-slate-200'
+                        ? 'bg-accent border-accent text-ink-on-accent shadow-card'
+                        : 'bg-surface border-border-strong text-ink-secondary hover:text-ink hover:border-ink-muted'
                     }`}
                   >
                     {d.label}
@@ -219,7 +230,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
 
         {scheduleType === 'times_per_week' && (
           <div className="space-y-1.5 pt-1">
-            <span className="text-[11px] text-slate-400 block">
+            <span className="text-xs text-ink-secondary block">
               Streak will calculate based on completing this target each week.
             </span>
             <div className="flex items-center gap-3">
@@ -229,9 +240,10 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                 max="7"
                 value={targetCount}
                 onChange={(e) => setTargetCount(Number(e.target.value))}
-                className="flex-1 accent-emerald-500 cursor-pointer"
+                aria-label="Weekly target days"
+                className="flex-1 accent-success-fill cursor-pointer"
               />
-              <span className="text-sm font-mono font-bold text-emerald-400 min-w-[5rem] text-right">
+              <span className="text-sm font-bold text-accent-text tabular-nums min-w-[5rem] text-right">
                 {targetCount} days/week
               </span>
             </div>
@@ -242,8 +254,8 @@ export const HabitForm: React.FC<HabitFormProps> = ({
       {/* Target & Reminder Time Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label htmlFor="target-unit-input" className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-            <Target className="w-3.5 h-3.5 text-slate-400" />
+          <label htmlFor="target-unit-input" className="text-xs font-semibold text-ink-secondary flex items-center gap-1.5">
+            <Target className="w-3.5 h-3.5 text-ink-muted" />
             Target Unit / Goal
           </label>
           <input
@@ -252,13 +264,13 @@ export const HabitForm: React.FC<HabitFormProps> = ({
             placeholder="e.g. 30 mins, 2 liters"
             value={targetUnit}
             onChange={(e) => setTargetUnit(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm transition"
+            className={INPUT_CLASS}
           />
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="reminder-time-input" className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
+          <label htmlFor="reminder-time-input" className="text-xs font-semibold text-ink-secondary flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-ink-muted" />
             Reminder Time
           </label>
           <input
@@ -266,15 +278,15 @@ export const HabitForm: React.FC<HabitFormProps> = ({
             type="time"
             value={reminderTime}
             onChange={(e) => setReminderTime(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm font-mono transition"
+            className={INPUT_CLASS}
           />
         </div>
       </div>
 
       {/* Motivation / Notes */}
       <div className="space-y-1.5">
-        <label htmlFor="habit-notes-input" className="text-xs font-semibold text-slate-300 block">
-          Motivation or Trigger <span className="text-slate-500 font-normal">(optional)</span>
+        <label htmlFor="habit-notes-input" className="text-xs font-semibold text-ink-secondary block">
+          Motivation or Trigger <span className="text-ink-muted font-normal">(optional)</span>
         </label>
         <input
           id="habit-notes-input"
@@ -282,7 +294,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
           placeholder="e.g. Immediately after morning coffee"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm transition"
+          className={INPUT_CLASS}
         />
       </div>
 
@@ -290,13 +302,13 @@ export const HabitForm: React.FC<HabitFormProps> = ({
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 text-sm font-medium transition cursor-pointer"
+          className="flex-1 py-3 min-h-[44px] rounded-xl bg-bg-secondary hover:bg-border text-ink-secondary hover:text-ink text-sm font-medium transition cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="flex-1 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-semibold shadow-lg shadow-emerald-500/20 active:scale-95 transition cursor-pointer"
+          className="flex-1 py-3 min-h-[44px] rounded-xl bg-accent hover:bg-accent-hover text-ink-on-accent text-sm font-semibold shadow-card active:scale-[0.98] transition cursor-pointer"
         >
           {submitLabel ?? (initialHabit ? 'Save Changes' : 'Create Habit')}
         </button>

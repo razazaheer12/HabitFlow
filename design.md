@@ -1,365 +1,534 @@
 # HabitFlow — Design System
 
-**Version:** 2.0 (Phase 2 — Production Hardening & Premium UI/UX)
-**Status:** Reflects the visual identity as implemented in source after the Phase 2 transformation. Former audit inconsistencies (⚠️) — invalid `slate-750`/`slate-850` classes, remote Google Fonts, no-op `animate-in`/`no-scrollbar` utilities, missing reduced-motion support, sub-11px type, duplicate add buttons, and unconfirmed destructive actions — are now resolved and documented inline (see `AUDIT.md`).
+**Version:** 3.0 (Phase 3 — Premium Light Redesign)
+**Status:** Reflects the visual identity as implemented in source after the Phase 3 Premium Light transformation.
 
-HabitFlow uses a **dark navy + emerald** identity built on the Tailwind CSS `slate` and `emerald` palettes, with cyan/sky as the secondary accent. Styling is utility-first Tailwind CSS v4 (configured via `@theme` in `src/index.css` — there is no `tailwind.config.js`). There is intentionally **no glassmorphism-heavy style, no light theme, and no decorative gradients** beyond the two brand gradients listed below.
+> **Premium Light is the only supported theme. There is no Dark Mode.**
+> There is no theme switcher, no `dark:` variants, and no automatic system-theme
+> switching anywhere in the UI. The former "dark navy + emerald" identity from
+> v2.0 has been fully retired. Every color, radius, shadow, font and motion value
+> is declared as a semantic custom property in `src/index.css` `@theme` (Tailwind
+> CSS v4, CSS-first — there is no `tailwind.config.js`), so components consume
+> tokens like `bg-bg`, `text-ink`, `bg-accent`, `border-border` and never
+> hard-code raw HEX or palette utilities (`slate-*`, `emerald-*`, etc.).
+>
+> **One inert exception:** the persisted `UserProfile.theme` schema field
+> (`'dark' | 'light' | 'system'`, default `'dark'`) is intentionally left
+> untouched to honor the "do not change localStorage keys or data schemas"
+> constraint. Nothing reads it for styling — the app always renders Premium
+> Light regardless of its value.
 
 ---
 
 ## 1. Color System
 
+The identity is a **warm paper-light canvas with a signature lime accent and a
+deep forest-green ink**, supported by accessible semantic state families and a
+pastel category palette harmonized to the lime.
+
 ### 1.1 Backgrounds & Surfaces
 
 | Role | Token / Class | Hex | Usage (verified in source) |
 |---|---|---|---|
-| Primary background | `bg-slate-950` (`--color-surface-base`) | `#020617` | `body`, app shell (`App.tsx`), skeleton screen |
-| PWA chrome | manifest `background_color` / `theme_color` | `#020617` | `manifest.json`, `index.html` meta — now matches `slate-950` exactly |
-| Secondary background / card surface | `bg-slate-900` (`--color-surface`, + `/90`, `/80`, `/60`, `/40` alpha variants) | `#0f172a` | Cards, modals, library tiles, habit cards |
-| Elevated surface | `--color-surface-elevated` / `bg-slate-850` | `#172033` | Heatmap empty cells, raised insets |
-| Elevated inset surface | `bg-slate-800` (`--color-surface-interactive`, + `/80`, `/60`, `/50`, `/40`) | `#1e293b` | Inputs, buttons, dropdown menus, stat insets, segmented control tracks |
-| Custom hover surface | `hover:bg-slate-750` (`--color-slate-750`) | `#293548` | Secondary-button hover. **`slate-750` and `slate-850` are now first-class tokens defined in `src/index.css` `@theme`** (previously no-op classes — see AUDIT.md, resolved) |
-| Sticky header | `bg-slate-950/85` + `backdrop-blur-md` | — | Top navigation bar |
-| Mobile bottom nav | `bg-slate-950/95` + `backdrop-blur-lg` | — | Fixed bottom tab bar |
-| Modal overlay | `bg-slate-950/85` + `backdrop-blur-md` (Freeze modal: `/80`) | — | All modal dialogs |
+| Page background | `--color-bg` / `bg-bg` | `#F8F9F5` | `html`, `body`, app shell, skeleton, onboarding wrapper |
+| Secondary background | `--color-bg-secondary` / `bg-bg-secondary` | `#F1F3ED` | Section bands, inset tracks, segmented-control tracks, carousel wrapper, disabled fills |
+| Surface | `--color-surface` / `bg-surface` | `#FFFFFF` | Cards, panels, modals, inputs, library tiles, dropdowns |
+| Elevated surface | `--color-surface-elevated` | `#FFFFFF` | Raised cards/dropdowns (differentiated by shadow, not color) |
+| Sticky header | `bg-bg/85` + `backdrop-blur-md` | — | Top navigation bar |
+| Mobile bottom nav | `bg-surface/95` + `backdrop-blur-lg` | — | Fixed bottom tab bar |
+| Modal overlay | `bg-ink/40` + `backdrop-blur-sm` | — | All modal dialogs |
 
-### 1.2 Accent Colors
+### 1.2 Ink (text) ramp
 
-| Role | Token | Hex | Usage |
+| Role | Token / Class | Hex | Contrast on white |
 |---|---|---|---|
-| Primary accent | `emerald-500` | `#10b981` | Primary buttons, active tabs, selected states, checkbox checked fill, progress rings |
-| Primary accent hover | `emerald-400` | `#34d399` | Button hover, heatmap intensity 4, active nav text |
-| Primary accent text | `text-emerald-400` / `text-emerald-300` | `#34d399` / `#6ee7b7` | Active nav links, section eyebrow labels, links |
-| Primary accent tint | `bg-emerald-500/10`, `/15`, `/20` + `border-emerald-500/20`–`/40` | — | Icon chips, badges, soft-selected states |
-| Secondary accent | `sky-500` / `sky-400` | `#0ea5e9` / `#38bdf8` | Streak-freeze / Holiday Mode identity, heatmap frozen cells, info banners |
-| Tertiary brand | `cyan-500` / `cyan-400` | `#06b6d4` / `#22d3ee` | Logo tile gradient endpoint, greeting name gradient |
+| Primary ink | `--color-ink` / `text-ink` | `#20251F` | AAA (≈15:1) |
+| Secondary ink | `--color-ink-secondary` / `text-ink-secondary` | `#5F655C` | AA |
+| Muted ink | `--color-ink-muted` / `text-ink-muted` | `#777E75` | AA-large / decorative only |
+| Ink on accent | `--color-ink-on-accent` / `text-ink-on-accent` | `#20251F` | 9.71:1 on lime (AAA) |
+| Accessible green text | `--color-accent-text` / `text-accent-text` | `#3F6B12` | 5.35:1 on white (AA) |
 
-### 1.3 Brand Gradients (only two; do not add more)
+### 1.3 Accent (lime) & brand
 
-1. **Logo tile:** `bg-gradient-to-tr from-emerald-500 to-cyan-500` with `text-slate-950` icon and `shadow-emerald-500/20` glow.
-2. **Greeting name:** `text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400` (hero H1 user name only).
-
-### 1.4 Text
-
-| Role | Class | Hex |
-|---|---|---|
-| Text primary | `text-white` | `#ffffff` |
-| Text body | `text-slate-100` / `text-slate-200` | `#f1f5f9` / `#e2e8f0` |
-| Text secondary | `text-slate-300` / `text-slate-400` | `#cbd5e1` / `#94a3b8` |
-| Text muted / placeholder | `text-slate-500` | `#64748b` |
-| Text on accent (primary buttons) | `text-slate-950` | `#020617` |
-| Text disabled | `text-slate-500`–`slate-600` | — |
-| Selection | `selection:bg-emerald-500/20 selection:text-emerald-300` | — |
-
-### 1.5 Borders & Dividers
-
-| Role | Class |
-|---|---|
-| Default card/modal border | `border-slate-800` (often `/80`, `/60` alpha) |
-| Input border | `border-slate-700` (`/80`, `/60` variants) |
-| Hover border | `hover:border-slate-700` (cards), `hover:border-slate-500` (checkbox) |
-| Internal divider | `border-slate-800/60`, `border-t border-slate-800` |
-| Accent borders | `border-emerald-500/20`–`/40` (success/selected), `border-sky-500/20`–`/40` (freeze), `border-amber-500/20`–`/30` (warning), `border-rose-500/20`–`/30` (danger) |
-
-### 1.6 Semantic / State Colors
-
-| State | Color family | Canonical treatment |
-|---|---|---|
-| Success / Completed | `emerald` | Solid `bg-emerald-500` fill + `text-slate-950` (checkbox, buttons); tinted `bg-emerald-500/10 border-emerald-500/20 text-emerald-300` (banners) |
-| Informational / Frozen | `sky` | `bg-sky-500/10 border-sky-500/20 text-sky-300` banners; `bg-sky-500/50 border-sky-400/40` heatmap frozen cell; solid `bg-sky-500 text-slate-950` for "Activate Freeze" button |
-| Warning / Missed / Streak flame | `amber` | `bg-amber-500/10 border-amber-500/20 text-amber-300` badges; streak pill uses `text-amber-300` + `Flame` icon `text-amber-400 fill-amber-400/20`; offline toast is solid `bg-amber-500/90 text-slate-950` |
-| Error / Danger / Destructive | `rose` | `bg-rose-500/10 border-rose-500/20 text-rose-300` error banners; `text-rose-400 hover:bg-rose-500/10` destructive menu items; solid `bg-rose-500 hover:bg-rose-400 text-white` for "Full Replace" import |
-| Neutral / Rest day | `slate` | `bg-slate-800 text-slate-400/500`, `Moon` icon |
-
-### 1.7 Category Colors (from `CATEGORIES` in `src/types/index.ts` + `HabitCard.tsx`)
-
-| Category | Name | Text color | Icon (lucide) |
+| Role | Token / Class | Hex | Usage |
 |---|---|---|---|
-| `fitness` | Fitness / Body | `text-amber-400` | `Dumbbell` |
-| `mind` | Mind & Focus | `text-sky-400` | `Brain` |
-| `productivity` | Productivity | `text-emerald-400` | `Zap` |
-| `learning` | Learning | `text-indigo-400` | `BookOpen` |
-| `health` | Health & Routine | `text-rose-400` | `HeartPulse` |
+| Primary accent | `--color-accent` / `bg-accent` | `#B8E65A` | Primary action **fill**, selection, achievement, checked checkbox, active segment |
+| Accent hover | `--color-accent-hover` / `bg-accent-hover` | `#A5D644` | Hover on accent fills |
+| Accent soft | `--color-accent-soft` / `bg-accent-soft` | `#F1F8E5` | Soft highlight bg, success tint, active nav tint, icon chips |
+| Accent border | `--color-accent-border` / `border-accent-border` | `#CDE8A0` | Borders on accent-soft surfaces |
+| Forest | `--color-forest` / `bg-forest` | `#263629` | Deep brand green: focus rings, dark icon chips, secondary toggle fills |
 
-### 1.8 Heatmap Intensity Scale (emerald ramp)
+> **Accessibility rule (non-negotiable):** the lime `#B8E65A` is a **fill only —
+> never text on white** (as text it is 1.34:1 and fails). Text/icons placed on a
+> lime fill always use `ink` (`#20251F`, 9.71:1). Any green *text* on a light
+> surface uses `accent-text` (`#3F6B12`, 5.35:1) or the semantic `success` ink.
 
-| Intensity | Meaning | Class |
+### 1.4 Borders, focus & selection
+
+| Role | Token / Class | Hex |
 |---|---|---|
-| 0 | 0% | `bg-slate-850 border-slate-800/60` (`#172033`, defined token) |
-| 1 | 1–39% | `bg-emerald-950/80 border-emerald-800/40` |
-| 2 | 40–74% | `bg-emerald-800` |
-| 3 | 75–99% | `bg-emerald-600` |
-| 4 | 100% | `bg-emerald-400` + `shadow-emerald-400/20` |
-| Frozen | any | `bg-sky-500/50 border-sky-400/40` |
+| Default border / divider | `--color-border` / `border-border` | `#E8EBE3` |
+| Strong border | `--color-border-strong` / `border-border-strong` | `#D8DDD0` |
+| Focus ring | `--color-focus` | `#263629` (2px solid, `outline-offset: 2px`) |
+| Selection background | `--color-selection-bg` | `#E4F5C4` |
+| Selection foreground | `--color-selection-ink` | `#20251F` |
 
-### 1.9 Category Progress Bar Colors (`HeatmapAnalytics.tsx`)
+### 1.5 Semantic state families
 
-`≥80%` → `bg-emerald-400` · `≥50%` → `bg-emerald-500` · `≥20%` → `bg-amber-400` · `<20%` → `bg-slate-600`. Track: `bg-slate-800`, height `h-2`, `rounded-full`.
+Each family exposes four coordinated tokens: base **ink**, soft **bg**,
+**border**, and a saturated **fill** (for dots, bars, non-text indicators).
 
-### 1.10 Confetti Palette (`src/utils/confetti.ts`)
+| State | ink | bg | border | fill | Canonical treatment |
+|---|---|---|---|---|---|
+| Success | `success` `#3F6B12` | `success-bg` `#F1F8E5` | `success-border` `#CDE8A0` | `success-fill` `#8CC63F` | Positive deltas, valid backup, progress ring arc |
+| Warning | `warning` `#8A5A00` | `warning-bg` `#FBF1DE` | `warning-border` `#F0DCB8` | `warning-fill` `#E0A43C` | Streak flame, **missed** habit state, archived, offline toast, partial day |
+| Error | `error` `#B42318` | `error-bg` `#FDECEA` | `error-border` `#F5C6C0` | `error-fill` `#E0655C` | Destructive actions, negative deltas, "Full Replace" import, validation errors |
+| Info | `info` `#175E88` | `info-bg` `#E7F2F9` | `info-border` `#BBDCEE` | `info-fill` `#4E9BC8` | Streak-freeze / Holiday Mode, frozen heatmap cells, local-only notices, restore section |
+| Neutral | `neutral` `#5F655C` | `neutral-bg` `#F1F3ED` | `neutral-border` `#E8EBE3` | `neutral-fill` `#A8AEA4` | Rest day, flat/no-data deltas |
+| Disabled | `disabled` `#A8AEA4` | `disabled-bg` `#F1F3ED` | `disabled-border` `#E8EBE3` | — | Exhausted freeze allowance, inert controls |
 
-- Streak celebration: `#10b981, #06b6d4, #3b82f6, #f59e0b, #ec4899`
-- All-complete celebration: `#10b981, #34d399, #6ee7b7, #06b6d4`
+> **"Missed" reconciliation (enforced).** The v1 foundation doc was internally
+> inconsistent about the missed-day color (warning in one section, error in
+> another). This implementation standardizes on **warning** for habit cards and
+> status badges (a missed day is a recoverable, non-destructive state, visually
+> paired with the streak flame). The error tint appears **only** as a dense
+> heatmap accent where a stronger signal is warranted. Never wire "missed" to the
+> destructive `error` family on cards.
+
+### 1.6 Category palette (`--color-cat-*` in `src/index.css`)
+
+Each category provides `-bg`, `-ink`, `-icon`, `-border`, `-progress` tokens —
+pastel, harmonized to the lime so no category competes with the accent.
+
+| Category | Name | ink (text) | icon | progress bar | Icon (lucide) |
+|---|---|---|---|---|---|
+| `fitness` | Fitness / Body | `#8A5A00` | `#C77E14` | `#E0A43C` | `Dumbbell` |
+| `mind` | Mind & Focus | `#175E88` | `#2E7FB0` | `#4E9BC8` | `Brain` |
+| `productivity` | Productivity | `#3F6B12` | `#6FA32B` | `#8CC63F` | `Zap` |
+| `learning` | Learning | `#4A3F9F` | `#6A5FD0` | `#7A6FE0` | `BookOpen` |
+| `health` | Health & Routine | `#B42318` | `#D2554C` | `#E0655C` | `HeartPulse` |
+
+Consumed via local maps, not the legacy `CATEGORIES[].color` string:
+`HabitCard.tsx` (`CAT_CHIP` / `CAT_ICON`), `HabitForm.tsx` (`CAT_SELECTED`),
+`HeatmapAnalytics.tsx` (`CAT_DOT` → `text-cat-*-icon`), `HabitsPage.tsx`
+(`CAT_TEXT` → `text-cat-*-ink`). The `color` field on `CATEGORIES` remains in
+the type but is no longer used for rendering.
+
+### 1.7 Heatmap intensity ramp (`--color-heat-*`)
+
+A 5-step lime ramp from empty to fully complete, plus distinct frozen treatment.
+
+| Intensity | Meaning | Token / Class | Hex |
+|---|---|---|---|
+| 0 | 0% | `bg-heat-0` (+ `border-border`) | `#F1F3ED` |
+| 1 | 1–39% | `bg-heat-1` | `#E9F5D3` |
+| 2 | 40–74% | `bg-heat-2` | `#CDE8A0` |
+| 3 | 75–99% | `bg-heat-3` | `#A9D95C` |
+| 4 | 100% | `bg-heat-4` | `#7CB92E` |
+| Frozen | any (Holiday Mode) | `bg-heat-frozen` + `border-heat-frozen-border` | `#CFE3F2` / `#9CC6E0` |
+
+Reserved-but-unused tokens `--color-heat-rest` (`#E8EBE3`) and
+`--color-heat-missed` (`#F6D5D2`) exist for future dense-grid states; the
+current heatmap branches only on `isFrozen` + `intensity` (preserving the
+existing analytics logic).
+
+### 1.8 Category progress bar colors (`HeatmapAnalytics.tsx`)
+
+Threshold-driven, semantic (not per-category): `≥80%` → `bg-success-fill` ·
+`≥50%` → `bg-success` · `≥20%` → `bg-warning-fill` · `<20%` → `bg-neutral-fill`.
+Track: `bg-bg-secondary`, `h-2`, `rounded-full`, minimum visible width 3% when
+data exists.
+
+### 1.9 Confetti palette (`src/utils/confetti.ts`)
+
+Aligned to the brand ramp (decorative; reduced-motion guarded):
+
+- Streak / onboarding celebration: `#B8E65A, #8CC63F, #263629, #E0A43C, #4E9BC8`
+- All-complete celebration: `#B8E65A, #A5D644, #8CC63F, #7CB92E`
 
 ---
 
 ## 2. Typography
 
-### 2.1 Font Families (`src/index.css` `@theme` + `src/main.tsx`)
+### 2.1 Font families (`src/index.css` `@theme` + `src/main.tsx`)
 
 | Token | Stack | Loaded from |
 |---|---|---|
-| `--font-sans` | `'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif` | **Self-hosted** via `@fontsource-variable/geist` (WOFF2, bundled same-origin, `font-display: swap`) |
-| `--font-mono` | `'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace` | **Self-hosted** via `@fontsource-variable/jetbrains-mono` (WOFF2, bundled same-origin, `font-display: swap`) |
+| `--font-sans` | `'Manrope Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif` | **Self-hosted** via `@fontsource-variable/manrope` (`wght.css`, WOFF2 bundled same-origin, `font-display: swap`) |
+| `--font-mono` | `'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace` | **Self-hosted** via `@fontsource-variable/jetbrains-mono` (WOFF2, same-origin) |
 
-Fonts are imported in `src/main.tsx` and bundled by Vite into `dist/assets/*.woff2`, so they are served same-origin and cached by the service worker — **no remote Google Fonts request, no offline fallback gap, no layout shift** (the previous Plus Jakarta Sans / remote Google Fonts dependency was removed). Sans is the default for all UI text. Mono is reserved for **numeric statistics, dates/day numbers, times, streak counts, target units, and backup summary grids** (`font-mono` + `tabular-nums` where alignment matters).
+Manrope replaced the former Geist variable font. Both are imported in
+`src/main.tsx` and bundled by Vite into `dist/assets/*.woff2`, so they are served
+same-origin and cached by the service worker — **no remote request, no offline
+gap, no layout shift** (PWA/offline-safe). Sans is the default for all UI text.
 
-### 2.2 Weight Scale
+> **Mono is reserved for genuinely technical / export contexts only** — the
+> backup validation summary grid (`BackupModal.tsx`) and the timezone identifier
+> (`AnalyticsPage.tsx`). **Consumer statistics no longer use mono**: stat values,
+> streak counts, percentages, comparison deltas, day numbers, times and target
+> units use the sans face with `tabular-nums` for alignment.
+
+### 2.2 Weight scale
 
 | Weight | Class | Usage |
 |---|---|---|
-| 900 | `font-black` | Logo tile icon treatment |
-| 800 | `font-extrabold` | Wordmark "HabitFlow", hero H1 greeting |
-| 700 | `font-bold` | Card/section headings, stat numbers, active nav, primary buttons |
-| 600 | `font-semibold` | Nav links, form labels, badges, secondary buttons, habit titles |
+| 800 | `font-extrabold` | Wordmark "HabitFlow", hero H1 greeting, big stat values |
+| 700 | `font-bold` | Card/section headings, stat numbers, primary buttons, habit titles |
+| 600 | `font-semibold` | Nav links, form labels, badges, secondary buttons, category names |
 | 500 | `font-medium` | Body labels, mobile tab labels, dropdown items |
 | 400 | (default) | Body copy, muted text |
 
-### 2.3 Heading Hierarchy
+### 2.3 Heading hierarchy
 
 | Level | Classes | Where |
 |---|---|---|
-| H1 | `text-2xl sm:text-3xl font-extrabold text-white` | Hero greeting ("Good Morning, {Name}") |
-| H2 (modal title) | `text-xl font-bold text-white tracking-tight` | HabitModal, SettingsModal |
-| H2 (section) | `text-lg font-bold text-white` / `text-base font-bold text-white tracking-tight` | Library header, settings tab, analytics card headers |
-| H3 (card sub-title) | `text-base font-bold text-white tracking-tight` | Freeze/Journal/PWA modal titles |
-| Eyebrow label | `text-xs font-bold uppercase tracking-wider text-emerald-400` (+ icon) | Settings modal section headers |
-| Kicker | `text-xs font-semibold tracking-wider uppercase text-emerald-400` | Onboarding "Welcome to HabitFlow" |
+| H1 (hero) | `text-[28px] leading-9 sm:text-[32px] sm:leading-10 font-extrabold tracking-[-0.02em] text-ink` | Hero greeting — **plain ink, no gradient** |
+| H1 (page) | `text-xl font-bold text-ink tracking-tight` / `text-2xl font-bold text-ink` | Library, Settings, Analytics headers |
+| H2 (modal title) | `text-lg/xl font-bold text-ink tracking-tight` | Backup, Settings, Onboarding modals |
+| H2 (section) | `text-base font-bold text-ink tracking-tight` | Analytics card headers |
+| Eyebrow / kicker | `text-xs font-semibold uppercase tracking-[0.08em]/tracking-wider text-accent-text` | Section eyebrows, "Welcome to HabitFlow", "Live Today" |
 
-### 2.4 Body, Labels & Captions
+### 2.4 Body, labels & captions
 
 | Role | Classes |
 |---|---|
-| Body (modal copy) | `text-xs sm:text-sm text-slate-400 leading-relaxed` |
-| Form label | `text-xs font-medium/semibold text-slate-300` (often with a 3.5px lucide icon) |
-| Optional marker | `text-slate-500 font-normal` "(optional)" |
-| Required marker | `text-rose-400` "*" |
+| Body (modal copy) | `text-xs sm:text-sm text-ink-secondary leading-relaxed` |
+| Form label | `text-xs font-medium/semibold text-ink-secondary` |
+| Optional marker | `text-ink-muted text-[11px] font-normal` "(optional)" |
+| Required marker | `text-error` "*" |
 | Micro label / badge | `text-[11px]`, `uppercase` for day letters, `font-semibold` for badges |
-| Helper text | `text-[11px] text-slate-400` |
-| Stat caption | `text-[11px] text-slate-500` (hidden on mobile via `hidden sm:block`) |
+| Helper / caption | `text-[11px] text-ink-secondary` (muted only for large/decorative) |
 
-> **11px floor (enforced):** the smallest type anywhere in the app is `text-[11px]`. All former `text-[10px]`/`text-[9px]` usages were raised to `11px`. Tiny metadata is used sparingly and never for primary content.
+> **11px floor (enforced):** the smallest type anywhere is `text-[11px]`, used
+> sparingly for metadata and never for primary content. Small meaningful labels
+> prefer `ink-secondary` (AA) over `ink-muted` (AA-large only).
 
-### 2.5 Numeric Statistics
+### 2.5 Numeric statistics
 
-- Big stat values: `text-lg sm:text-2xl font-bold font-mono text-white tabular-nums`.
-- Streak pill: `text-xs font-semibold font-mono tabular-nums text-amber-300` with unit suffix `d`/`w` in `text-[11px] text-amber-400/70 font-normal`.
-- Percentages in comparisons: `text-sm font-bold text-white font-mono` current, `text-[11px] text-slate-500 font-mono` previous.
-- Character counter (journal): `text-[11px] text-slate-500 font-mono`.
+- Big stat values: `text-xl sm:text-[28px] font-extrabold text-ink tabular-nums` (**no mono**).
+- Streak pill: `text-xs font-semibold tabular-nums text-warning` on `bg-warning-bg border-warning-border`.
+- Comparison percentages: `text-sm font-bold text-ink tabular-nums` current, `text-[11px] text-ink-muted tabular-nums` previous; delta pill `text-xs font-bold tabular-nums` (no mono).
+- Character counter (journal): `text-xs text-ink-muted tabular-nums`.
+- Category / overall rates: `font-bold text-ink tabular-nums` (overall in `text-accent-text`).
 
 ---
 
 ## 3. Spacing & Layout
 
-### 3.1 Spacing Scale (Tailwind default, 4px base)
+### 3.1 Spacing scale (Tailwind default, 4px base)
 
-Commonly used steps: `0.5` (2px) · `1` (4px) · `1.5` (6px) · `2` (8px) · `2.5` (10px) · `3` (12px) · `3.5` (14px) · `4` (16px) · `5` (20px) · `6` (24px) · `8` (32px).
-Vertical rhythm inside sections uses `space-y-1.5` (labels/inputs), `space-y-3`–`space-y-4` (blocks), `space-y-5`–`space-y-6` (modal sections).
+Common steps: `0.5`–`8`. Vertical rhythm: `space-y-1.5` (labels/inputs),
+`space-y-3`–`space-y-4` (blocks), `space-y-5`–`space-y-6` (modal sections).
 
-### 3.2 Container & Layout Widths
+### 3.2 Container & layout widths
 
 | Element | Value |
 |---|---|
-| Max content width | `max-w-7xl` (80rem) `mx-auto` |
-| Settings tab column | `max-w-2xl mx-auto` |
-| Modal width (large: Habit/Settings/Backup/Onboarding) | `max-w-lg` (32rem) |
-| Modal width (small: Freeze/Journal/PWA/iOS guide) | `max-w-md` (28rem) / `max-w-sm` (24rem) |
-| Page padding | `p-4 sm:p-6 lg:p-8`; header `px-4 sm:px-8 py-3.5` |
-| Dashboard grid | `grid-cols-1 lg:grid-cols-12`; left column `lg:col-span-8`, right `lg:col-span-4`, `gap-6`, `items-start` |
+| `<main>` (AppShell) | `flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12` — full-bleed; each page owns its max-width |
+| Today dashboard | `mx-auto w-full max-w-[720px] space-y-6` |
+| Analytics | `mx-auto w-full max-w-7xl space-y-6` |
+| Habits library | `mx-auto w-full max-w-5xl space-y-4` |
+| Settings | `mx-auto w-full max-w-2xl space-y-5` |
+| Habit form page | `mx-auto w-full max-w-lg space-y-4` |
+| Modal width (large) | `max-w-lg` (Backup, Settings, Onboarding `max-w-md`) |
+| Modal max height | `max-h-[90vh] overflow-y-auto` |
 | Library grid | `grid-cols-1 md:grid-cols-2 gap-4` |
-| Quick stats grid | `grid-cols-3 gap-2.5 sm:gap-4` |
 | Mobile bottom clearance | `pb-24 md:pb-12` on `<main>` |
 
-### 3.3 Card Padding
+### 3.3 Border-radius scale
 
-- Large cards / modals: `p-6` (`sm:p-8` on onboarding).
-- Analytics panels: `p-4 sm:p-6`.
-- Habit card: `p-3.5 sm:p-4`.
-- Stat cards & insets: `p-3 sm:p-4`, `p-3.5`.
-- Date carousel wrapper: `p-3.5`.
+| Token | Value | Tailwind | Usage |
+|---|---|---|---|
+| `--radius-chip` | 8px | `rounded-lg` | Chips, badges, segmented inner buttons |
+| `--radius-checkbox` | 10px | `rounded-[10px]` | Habit checkbox (7×7 box) |
+| `--radius-control` | 12px | `rounded-xl` | Buttons, inputs, icon chips, dropdowns |
+| `--radius-card` | 16px | `rounded-2xl` | Cards, stat tiles, date chips, banners |
+| `--radius-panel` | 20px | `rounded-[20px]` | First-run panel, large insets |
+| `--radius-modal` | 24px | `rounded-3xl` | Modals, large analytics panels |
+| — | — | `rounded-full` | Pills, progress bars, status dots, day toggles |
 
-### 3.4 Border-Radius Scale
+Heatmap cells `rounded-[4px]`, legend swatches `rounded-[3px]`.
 
-| Token | Value | Usage |
+### 3.4 Shadows (`--shadow-*`, warm-tinted — never black glows)
+
+| Token / Class | Definition | Usage |
 |---|---|---|
-| `rounded-3xl` | 24px | Modals, large analytics panels, empty state |
-| `rounded-2xl` | 16px | Cards, stat tiles, insets, date chips, checkboxes (7×7), logo tile (large), banners |
-| `rounded-xl` | 12px | Buttons, inputs, dropdown menus, badges, icon chips (8×8), small tiles |
-| `rounded-lg` | 8px | Segmented-control inner buttons, streak pill, note chips |
-| `rounded-md` | 6px | Target-unit chip |
-| `rounded-[4px]` / `rounded-[3px]` | 4/3px | Heatmap cells / legend swatches |
-| `rounded-full` | — | Progress bars, status dots, ambient blur circles |
+| `shadow-card` | `0 1px 2px rgba(32,37,31,.04), 0 1px 3px rgba(32,37,31,.06)` | Cards, primary buttons, stat tiles, selected chips |
+| `shadow-elevated` | `0 2px 6px …06, 0 4px 12px …06` | Hovered cards |
+| `shadow-dropdown` | `0 4px 8px …08, 0 12px 24px …10` | Menus, toasts, tooltip |
+| `shadow-modal` | `0 8px 16px …10, 0 24px 48px …14` | Modal panels |
 
-### 3.5 Component Dimensions
+All shadow colors derive from ink `rgba(32,37,31,…)`, keeping them warm rather
+than the retired cool slate glaze.
+
+### 3.5 Component dimensions
 
 | Component | Value |
 |---|---|
-| Primary button (header) | `px-3.5 py-1.5 text-xs`, icon `w-3.5 h-3.5` |
-| Hero buttons | `px-3.5/px-4 py-2 text-xs` |
-| Modal submit button | `py-3 text-sm` (onboarding: `h-12`) |
-| Icon-only buttons | `w-8 h-8 rounded-xl` (close, settings, menu, carousel arrows) |
-| Checkbox touch target | `min-w-[44px] min-h-[44px]` wrapper around a `w-7 h-7` visual box |
-| Text input | `px-4 py-2.5 rounded-xl text-sm` (settings variant `px-3.5 py-2`) |
-| Textarea (journal) | `rows={3}`, `px-3.5 py-2.5`, `resize-none`, `maxLength=160` |
-| Date carousel chip | `min-w-[48px] py-2 px-1.5 rounded-2xl` |
+| Header "Add Habit" | `h-11 rounded-xl bg-accent text-ink-on-accent shadow-card` |
+| Settings icon link | `w-11 h-11 bg-surface border-border` |
+| Icon-only buttons | `w-8 h-8`/`w-10 h-10 rounded-xl bg-surface/bg-bg-secondary` |
+| Checkbox touch target | ≥44px wrapper around a `w-7 h-7 rounded-[10px] border-2` box |
+| Text input | `px-3.5/4 py-2/2.5 rounded-xl bg-surface border-border-strong text-ink placeholder-ink-muted focus:border-forest focus:ring-2 focus:ring-forest/15` |
+| Primary CTA (modal) | `min-h-[44px]`/`h-12 rounded-xl bg-accent hover:bg-accent-hover text-ink-on-accent` |
+| Date carousel chip | `min-w-[48px] rounded-2xl border` |
 | Heatmap cell | `w-3.5 h-3.5 sm:w-4 sm:h-4` |
-| Bottom nav | `h-16`, `grid-cols-4`, `max-w-lg mx-auto`, icons `w-5 h-5`, labels `text-[11px]` |
-| Dropdown menu | `w-48 rounded-xl py-1`, items `px-3 py-2 text-xs` |
-| Modal max height | `max-h-[90vh] overflow-y-auto` (Habit/Settings/Backup) |
-| Starter-habit list | `max-h-48 overflow-y-auto` |
-| Logo tile | `w-8 h-8` (header), `w-10 h-10` (onboarding/skeleton) |
-| Progress ring SVG | `w-10 h-10 sm:w-12 sm:h-12`, `viewBox 0 0 60 60`, `r=24`, `strokeWidth=4.5`, `-rotate-90` |
+| Bottom nav | `h-16`, `grid-cols-4`, icons `w-5 h-5`, labels `text-xs` |
+| Progress ring SVG | `w-10 h-10 sm:w-12 sm:h-12`, `viewBox 0 0 60 60`, `r=24`, `strokeWidth=4.5`, `-rotate-90`; track `stroke-bg-secondary`, arc `stroke-success-fill` |
 
-### 3.6 Responsive Breakpoints (Tailwind defaults)
+### 3.6 Responsive breakpoints (Tailwind defaults)
 
 | Prefix | Min-width | Key adaptations |
 |---|---|---|
-| (base) | — | Mobile: single column, bottom tab nav, condensed stat text, `hidden sm:inline` labels |
-| `sm:` | 640px | Stat subtext visible, two-column form grids, larger paddings |
+| (base) | — | Mobile: single column, bottom tab nav, icon-only install button (`hidden sm:inline` label), condensed stat text |
+| `sm:` | 640px | Stat subtext visible, two-column form grids, larger paddings, hero scales to 32px |
 | `md:` | 768px | Desktop top nav shown (`hidden md:flex`), bottom nav hidden (`md:hidden`), library 2-col grid |
-| `lg:` | 1024px | 12-col dashboard split (8+4), `lg:p-8` |
+| `lg:` | 1024px | `lg:px-8` page padding, wide analytics |
 
-### 3.7 Z-Index Layers
+Target range: iPhone SE (375px) → large desktop monitors. Verified targets
+`max-w-[720px]` (Today), `max-w-5xl` (Library), `max-w-7xl` (Analytics).
 
-`z-30` dropdown menu · `z-40` sticky header & bottom nav · `z-50` modals, tooltips, offline toast.
+### 3.7 Z-index layers
+
+`z-30` dropdown menu · `z-40` sticky header & bottom nav · `z-50` modals,
+tooltips · `z-[60]` toast stack · offline indicator.
 
 ---
 
 ## 4. Component Standards
 
-### 4.1 Top Navigation Bar (`App.tsx` header)
-Sticky, `bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80`. Strict 3-zone contract: **(1)** brand tile + wordmark, **(2)** 4 text nav links (`Today`, `Analytics`, `Habits (n)`, `Settings`) — active = `text-emerald-400 font-bold`, inactive = `text-slate-400 hover:text-white`, **(3)** PWA install button + emerald "Add Habit" button + settings icon button. Hidden nav on `< md`. The header "Add Habit" is the **single persistent primary create action** — the hero and library toolbar no longer render competing "New Habit"/"Create Habit" buttons (only contextual empty-state CTAs remain), eliminating duplicate prominent add buttons.
+### 4.1 Top navigation bar (`AppShell.tsx` header)
+Sticky, `bg-bg/85 backdrop-blur-md border-b border-border`. Three-zone contract:
+**(1)** brand tile (`w-9 h-9 rounded-xl bg-accent text-ink-on-accent shadow-card`
++ `Sparkles`) + wordmark (`text-ink tracking-tight`); **(2)** pill nav links —
+active `bg-accent-soft text-ink`, inactive `text-ink-secondary hover:text-ink
+hover:bg-bg-secondary` (`rounded-full`); **(3)** PWA install button + lime "Add
+Habit" button + settings icon link. Nav hidden `< md`. The header "Add Habit" is
+the single persistent primary create action. **No sidebar.**
 
-### 4.2 Bottom Mobile Navigation (`App.tsx` nav)
-Fixed, `md:hidden`, `bg-slate-950/95 backdrop-blur-lg border-t border-slate-800`, 4 equal columns (Today / Analytics / Habits / Settings), icon over `text-[11px]` label. Active: `text-emerald-400 font-bold`. Settings entry opens the SettingsModal directly (no dedicated tab).
+### 4.2 Bottom mobile navigation (`AppShell.tsx`)
+Fixed, `md:hidden`, `bg-surface/95 backdrop-blur-lg border-t border-border`, 4
+equal columns (Today / Analytics / Habits / Settings), icon over `text-xs` label.
+Active: `text-ink font-semibold` + `shadow-[inset_0_2px_0_0_var(--color-accent)]`
+(lime top bar); inactive `text-ink-secondary`.
 
-### 4.3 Hero Header + Stat Cards (`HeroHeader.tsx`)
-Greeting row: date line (`text-xs text-slate-400` + emerald "Live Today"/"Historical Log" pill), H1 with gradient name, time-based subtext; actions: a single Streak Freeze button (switches to sky "Holiday Mode" style when active). The completion subtitle reads "{completed} of {due} due".
-Stat cards (×3): `p-3 sm:p-4 rounded-2xl bg-slate-900/90 border-slate-800/80`, label `text-[11px] sm:text-xs text-slate-400`, mono value, optional `text-[11px]` caption, right-side icon chip (`w-8 h-8 sm:w-10 sm:h-10 rounded-xl` tinted bg + border). Completion card includes an SVG progress ring (emerald stroke, `transition-all duration-500 ease-out`).
+### 4.3 Hero header + stat cards (`HeroHeader.tsx`)
+Eyebrow (`text-ink-muted` + `accent-text` "Live Today"/"Historical Log"), H1
+greeting in **plain ink** (no gradient), time-based subtext; a single Streak
+Freeze button (`bg-info-bg border-info-border text-info` when Holiday Mode is
+active, else `bg-surface border-border text-ink-secondary`, `min-h-[44px]`).
+Three stat cards: `bg-surface border-border shadow-card rounded-2xl`, values
+`text-xl sm:text-[28px] font-extrabold text-ink tabular-nums`. Completion card
+includes the SVG progress ring (track `stroke-bg-secondary`, arc
+`stroke-success-fill`). Streak chip = warning family; habits chip = accent-soft.
 
-### 4.4 Date Carousel (`DateCarousel.tsx`)
-16 chips: past 14 days + today + tomorrow. Prev/next arrow buttons (`w-8 h-8 rounded-xl`). Chip states: **selected** = solid `bg-emerald-500 text-slate-950 scale-105` + glow; **today** = `bg-slate-800 border-emerald-500/40`; **default** = `bg-slate-900/80 border-slate-800/80 text-slate-400`. Each chip: narrow weekday letter (`text-[11px] uppercase`), mono day number, and a 1.5px status dot — sky = frozen, emerald = all done, amber = partial. Horizontal scroll with hidden scrollbar; active chip auto-centers via `scrollIntoView`. A "Today" pill button appears when a non-today date is selected.
+### 4.4 Date carousel (`DateCarousel.tsx`)
+Prev/next `w-10 h-10 bg-surface border-border text-ink-secondary`. Chips carry
+`aria-current="date"` when selected. **Selected** = `bg-accent border-accent
+text-ink-on-accent shadow-card scale-105`; **today** = `bg-surface border-accent
+text-ink`; **default** = `bg-surface border-border text-ink-secondary`. Day number
+`text-sm font-bold tabular-nums` (no mono). 1.5px status dot: frozen =
+`bg-info-fill`, all-done = `bg-success-fill`, partial = `bg-warning-fill`
+(selected chip → `bg-ink-on-accent`). "Today" pill = `text-accent-text
+bg-accent-soft border-accent-border hover:bg-accent hover:text-ink-on-accent`.
 
-### 4.5 Habit Card (`HabitCard.tsx`)
-`rounded-2xl border` with state-driven skin:
-- Pending: `bg-slate-900/90 border-slate-800 hover:border-slate-700 shadow-sm`
-- Completed: `bg-slate-900/60 border-emerald-500/30`
-- Frozen: `bg-slate-900/40 border-sky-500/30`
-- Rest day: `bg-slate-900/30 border-slate-800/60`
-- Missed: `bg-slate-900/80 border-amber-500/20`
+### 4.5 Habit card (`HabitCard.tsx`)
+`rounded-2xl border shadow-card hover:shadow-elevated` (archived → `opacity-60`)
+with a state-driven skin:
+- Pending: `bg-surface border-border hover:border-border-strong`
+- Completed: `bg-accent-soft border-accent-border`
+- Frozen: `bg-info-bg border-info-border`
+- Rest day: `bg-neutral-bg border-border`
+- Missed: `bg-warning-bg border-warning-border`
 
-Anatomy: 44px checkbox button (7×7 `rounded-xl border-2` box — checked: solid emerald + `scale-105` + glow; frozen: sky tint + `ShieldAlert`; rest: slate + `Moon`) → content column: title (`text-sm font-semibold`, struck-through `text-slate-400 line-through` when complete) + mono target-unit chip + streak pill + `MoreVertical` menu → meta row (category icon/name, reminder time in mono, status badges "Streak Frozen"/"Planned Rest"/"Missed") → journal footer above `border-t border-slate-800/60` (note chip or "Add 1-line daily note" link).
+Anatomy: checkbox (`w-7 h-7 rounded-[10px] border-2`; checked = `bg-accent
+border-accent text-ink-on-accent animate-pop`, carries `aria-pressed`) → title
+(completed: `text-ink-secondary line-through decoration-border-strong`, else
+`text-ink`) + category pastel pill (`CAT_CHIP`/`CAT_ICON`) + streak pill
+(warning family, `tabular-nums`) + `MoreVertical` menu → status badges
+(frozen=info, rest=neutral, missed=warning) → journal footer above
+`border-border`.
 
-### 4.6 Dropdown Menu (habit ⋮)
-`absolute right-0 top-9 w-48 rounded-xl bg-slate-900 border-slate-700 shadow-2xl py-1 text-xs`; items `px-3 py-2 hover:bg-slate-800` with colored leading icons (emerald note, sky freeze, slate edit, amber archive); divider `h-px bg-slate-800`; destructive delete `text-rose-400 hover:bg-rose-500/10`. Closes on `onMouseLeave`. Delete routes through the accessible `ConfirmDialog` (explaining the cascade of logs/notes/freezes) before removing anything.
+### 4.6 Dropdown menu (habit ⋮)
+`bg-surface border-border shadow-dropdown rounded-xl`, with `role="menu"` /
+`role="menuitem"` / `aria-expanded` / `aria-haspopup`. Destructive delete uses
+`text-error hover:bg-error-bg` and routes through the accessible `ConfirmDialog`.
 
-### 4.7 Modals & Dialogs
-Standard shell: `fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md` overlay → panel `w-full max-w-lg|md bg-slate-900 border-slate-800 rounded-3xl p-6 shadow-2xl` + entrance `animate-in fade-in zoom-in-95`. Header pattern: title block (optionally with tinted `w-8 h-8 rounded-xl` icon chip) + `w-8 h-8 rounded-xl bg-slate-800` close button, separated by `pb-3 border-b border-slate-800 mb-4/5`. Footer pattern: paired Cancel (`bg-slate-800 text-slate-300`) / Primary (`bg-emerald-500 text-slate-950`) buttons `flex-1 py-2.5/3 rounded-xl`. Onboarding modal adds two ambient blur circles (`bg-emerald-500/10`, `bg-sky-500/10`, `blur-3xl`) — the only place this appears.
+### 4.7 Modals & dialogs
+Shell: `fixed inset-0 z-50 … bg-ink/40 backdrop-blur-sm` overlay → panel
+`bg-surface border-border rounded-3xl shadow-modal` + `animate-in fade-in
+zoom-in-95`. Header: title block (optionally an `bg-accent-soft border-accent-border
+text-accent-text` icon chip) + `bg-bg-secondary text-ink-muted` close button,
+separated by `pb-3 border-b border-border`. Footer: Cancel
+(`bg-bg-secondary text-ink-secondary`) / Primary (`bg-accent text-ink-on-accent`,
+`min-h-[44px]`). **Onboarding no longer uses ambient blur glows** — the modal is
+a clean surface panel.
 
-Every modal panel carries `role="dialog"` + `aria-modal="true"` + `aria-labelledby` and is wired through the shared `useModalA11y` hook: initial focus (autofocus field where present, else first control), Tab focus-trapping, focus restoration to the invoking element, and dismiss via **Escape or backdrop click**. The onboarding gate is the exception — it traps focus but is not dismissible (no `onClose`).
+Every panel carries `role="dialog"` + `aria-modal="true"` + `aria-labelledby` and
+is wired through the shared `useModalA11y` hook (initial focus, Tab trap, focus
+restoration, Escape / backdrop dismiss). The onboarding gate traps focus but is
+not dismissible.
 
 ### 4.8 Buttons
 
 | Variant | Classes |
 |---|---|
-| Primary | `bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-bold/semibold text-xs shadow-md shadow-emerald-500/20 rounded-xl` |
-| Secondary | `bg-slate-800 hover:bg-slate-700 text-slate-300/white border border-slate-700/800 rounded-xl text-xs font-semibold` |
-| Ghost/outline | `bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 rounded-xl` |
-| Soft accent | `bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20` |
-| Danger solid | `bg-rose-500 hover:bg-rose-400 text-white` |
-| Danger outline | `border-rose-500/30 text-rose-400 hover:bg-rose-500/10` |
-| Info solid | `bg-sky-500 hover:bg-sky-400 text-slate-950` (activate freeze) |
-| Segmented control | Track `bg-slate-800/80 p-1 rounded-xl border-slate-700/60`; active segment `bg-emerald-500 text-slate-950 rounded-lg shadow-sm` (sky variant in category-breakdown toggle) |
-| Filter chip | Active `bg-emerald-500 text-slate-950`; inactive `bg-slate-900/80 text-slate-400 border-slate-800`; `px-3 py-1.5 rounded-xl text-xs font-semibold` |
+| Primary | `bg-accent hover:bg-accent-hover text-ink-on-accent font-bold/semibold rounded-xl shadow-card` |
+| Secondary | `bg-surface hover:bg-bg-secondary text-ink border border-border-strong rounded-xl font-semibold` |
+| Ghost | `bg-bg-secondary hover:bg-border text-ink-secondary rounded-xl` |
+| Soft accent | `bg-accent-soft border-accent-border text-accent-text` |
+| Danger solid | `bg-error hover:brightness-110 text-white` |
+| Danger outline | `border-error-border text-error hover:bg-error-bg` |
+| Info solid | `bg-info hover:brightness-110 text-white` (activate freeze) |
+| Segmented control | Track `bg-bg-secondary p-1 border-border`; active `bg-accent text-ink-on-accent shadow-card` (forest variant `bg-forest text-white` in the category-breakdown toggle) |
+| Filter chip | Active `bg-accent text-ink-on-accent shadow-card`; inactive `bg-surface text-ink-secondary border-border hover:border-border-strong` |
 
 All interactive elements carry `cursor-pointer` and `transition`.
 
-### 4.9 Form Controls
-Inputs: `w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm transition`. Select: same shell + `cursor-pointer`. Range slider: `accent-emerald-500`. Day-of-week toggles: `flex-1 py-2 rounded-xl text-xs font-semibold`; checked = `bg-emerald-500/20 border-emerald-500/40 text-emerald-300`. Inline validation: error banner `p-3 text-xs rounded-xl bg-rose-500/10 border-rose-500/20 text-rose-300` above fields; error clears on next input change.
+### 4.9 Form controls (`HabitForm.tsx`, `SettingsModal.tsx`, `OnboardingModal.tsx`)
+Inputs: `bg-surface border-border-strong text-ink placeholder-ink-muted
+focus:border-forest focus:ring-2 focus:ring-forest/15`. Range slider:
+`accent-success-fill`; its value readout `text-accent-text tabular-nums` (no
+mono). Day-of-week toggles `rounded-full`; checked = `bg-accent border-accent
+text-ink-on-accent`. Category chips use the pastel `CAT_SELECTED` map +
+`shadow-card` when active. Inline validation: error banner in the error family
+above fields; clears on next input change.
 
 ### 4.10 Heatmap (`HeatmapAnalytics.tsx`)
-Weeks laid out as vertical columns of 7 cells (`flex gap-1.5`), horizontal scroll container. Cells are buttons (click → jump to that date; hover → `scale-125` + fixed-position tooltip `bg-slate-950 border-slate-700 rounded-xl shadow-2xl` showing formatted date + "x of y completed (n%)" / "Streak Frozen" / "Planned Rest Day"). Legend row under grid: frozen swatch left, 0%→100% emerald ramp right. Range selector: 3 Months (84d) / 6 Months (168d) / Full Year (364d).
+Weeks as vertical columns of 7 button cells (`flex gap-1.5`), horizontal scroll.
+Cell color from the `--color-heat-*` ramp (§1.7); hover `scale-125` +
+fixed-position tooltip (`bg-surface border-border-strong shadow-dropdown
+text-ink`). Legend: frozen swatch left, 0%→100% lime ramp right. Range selector:
+3 Months (84d) / 6 Months (168d) / Full Year (364d), active = lime.
 
-### 4.11 Progress Bars
-Track `w-full h-2 rounded-full bg-slate-800 overflow-hidden`; fill color-coded (see §1.9), `transition-all duration-700 ease-out`; minimum visible width of 3% when any data exists.
+### 4.11 Progress bars
+Track `bg-bg-secondary h-2 rounded-full overflow-hidden`; fill threshold-coded
+(§1.8), `transition-all duration-700 ease-out`; 3% minimum visible width.
 
-### 4.12 Comparison Cards (Week/Month-over-Month)
-`p-3.5 rounded-2xl bg-slate-850 border-slate-800`; left: label, mono current %, muted previous %, "x of y habits"; right: delta pill — up `bg-emerald-500/15 text-emerald-400 border-emerald-500/30` + `TrendingUp`, down `bg-rose-500/15 text-rose-400` + `TrendingDown`, flat `bg-slate-800 text-slate-400` + `Minus`.
+### 4.12 Comparison cards (Week/Month-over-Month)
+`bg-bg-secondary border-border rounded-2xl`; left: label, `tabular-nums` current
+%, muted previous %, "x of y scheduled check-ins"; right: delta pill — up
+`bg-success-bg text-success border-success-border` + `TrendingUp`, down
+`bg-error-bg text-error border-error-border` + `TrendingDown`, flat / no-data
+`bg-neutral-bg text-ink-secondary/ink-muted` + `Minus`.
 
-> **Percentage-point correctness (enforced):** the delta between two rates is rendered as `+N pp` / `−N pp` (percentage points), never as a relative percent. A move from 82% → 32% is labeled `−50 pp`. Each pill carries a `title` and `aria-label` explaining it is a change in percentage points, not a relative percent change.
+> **Percentage-point correctness (enforced):** the delta between two rates is
+> rendered as `+N pp` / `−N pp` (percentage points), never a relative percent.
+> Each pill carries a `title` and `aria-label` explaining this.
 
-### 4.13 Toasts & Indicators
-- **Toast system** (`Toast.tsx` + `useToasts.ts`): a `ToastStack` renders up to 3 transient toasts (success / error / info), auto-dismissing after ~4s, driven by the `useToasts` hook. Used for freeze allowance feedback, delete/reset confirmations, and reminder triggers.
-- **Offline toast** (`OfflineIndicator.tsx`): `fixed bottom-20 left-4 z-50`, solid `bg-amber-500/90 backdrop-blur-md text-slate-950 text-xs font-semibold rounded-xl px-3.5 py-2 border-amber-400 shadow-xl` + `WifiOff` icon, `animate-in slide-in-from-bottom-2`. Auto appears/disappears with `navigator.onLine` events.
-- **Settings save feedback**: button label swaps to "Saved" + `Check` icon for 2s.
-- **Backup import feedback**: inline banner, success = emerald tint, error = rose tint.
+### 4.13 Toasts & indicators
+- **Toast system** (`Toast.tsx`): `bg-surface border border-border border-l-4
+  ${bar} shadow-dropdown rounded-xl text-ink`, where `bar` is a semantic
+  left-accent (success / error / info) from `TOAST_STYLE`. Up to 3 transient
+  toasts, auto-dismiss ~4s.
+- **Offline indicator** (`OfflineIndicator.tsx`): `bg-warning-fill text-ink
+  border-warning-border shadow-dropdown`, `bottom-20 md:bottom-6 left-4 right-4
+  sm:right-auto`, `animate-in slide-in-from-bottom-2`, driven by
+  `navigator.onLine`.
+- **Settings save feedback**: button label swaps to "Saved" + `Check` for 2s.
+- **Backup import feedback**: inline banner, success / error families.
 
-### 4.14 Empty States
-Panel `p-8 text-center rounded-3xl bg-slate-900/40 border-slate-800/80 space-y-3`: centered `w-12 h-12 rounded-2xl bg-slate-800 text-slate-500` icon tile, `text-sm font-semibold text-white` title, `text-xs text-slate-400` explanation, soft-emerald CTA button. Implemented states: **first-run empty dashboard** (`FirstRunEmptyState.tsx`, premium welcome + single "create your first habit" CTA), **"No habits scheduled for this date"**, **empty habits library**, and **empty analytics** (no habits → "No analytics yet" panel).
+### 4.14 Empty states
+Panel `bg-surface border-border shadow-card rounded-3xl/rounded-[20px]`:
+centered `bg-bg-secondary text-ink-muted` icon tile, `text-ink` title,
+`text-ink-secondary` explanation, lime CTA. Implemented: first-run dashboard
+(`FirstRunEmptyState.tsx` — **no blur glows**), "No habits scheduled for this
+date", empty library, empty analytics, and `NotFoundPage` (404 in `text-ink/10`).
 
-### 4.15 Skeleton / Loading State
-Full-screen centered pulsing logo tile + "HabitFlow" wordmark + `text-xs text-slate-500` "Loading your routine..." (`animate-pulse`), shown until localStorage hydration completes.
+### 4.15 Skeleton / loading state (`App.tsx`)
+Full-screen `bg-bg text-ink` centered pulsing brand tile (`bg-accent
+text-ink-on-accent`) + wordmark + `text-ink-muted` "Loading your routine…",
+shown until localStorage hydration completes.
 
 ### 4.16 Iconography
-`lucide-react` exclusively. Standard sizes: `w-3 h-3` (inline micro), `w-3.5 h-3.5` (labels/buttons), `w-4 h-4` (default), `w-5 h-5` (nav/hero), `w-6 h-6` (empty state). Emphasis via `stroke-[2.5]`/`stroke-[3]` and `fill-*` (flame). Category icons per §1.7.
+`lucide-react` exclusively. Sizes `w-3`–`w-6`. Emphasis via `stroke-[2.5]` /
+`stroke-[3]`. Category icons per §1.6.
 
 ### 4.17 Scrollbars
-Global webkit scrollbar: 6px, transparent track, thumb `rgba(148,163,184,0.2)` → hover `0.4`, pill radius. Carousel/filter rows use the `no-scrollbar` utility (now defined in `src/index.css` via `@utility` — sets `scrollbar-width: none` and hides `::-webkit-scrollbar`).
+Global webkit scrollbar 8px, transparent track, thumb `rgba(32,37,31,0.16)` →
+hover `0.28`, pill radius. Carousel/filter rows use the `no-scrollbar` utility.
 
 ---
 
 ## 5. Motion & Interaction
 
-### 5.1 Implemented Motion
+### 5.1 Motion tokens (`--animate-*` in `src/index.css`)
+
+| Token / Class | Definition | Usage |
+|---|---|---|
+| `animate-in` | `hf-enter 0.2s cubic-bezier(0.16,1,0.3,1) both` | Modal / toast entrance, composed with `fade-in`, `zoom-in-95`, `slide-in-from-bottom-2` `@utility` state setters |
+| `animate-rise` | `hf-rise 0.24s …` | Rising content reveals |
+| `animate-pop` | `hf-pop 0.3s …` (scale 1 → 1.12 → 1) | Habit checkbox completion "pop" |
+
+Keyframes `hf-enter`, `hf-rise`, `hf-pop` are defined in `src/index.css`. No
+external `tailwindcss-animate` plugin.
+
+### 5.2 Implemented micro-interactions
 
 | Interaction | Specification |
 |---|---|
-| Checkbox check | `transition-all duration-200`; checked state adds `scale-105` + `shadow-md shadow-emerald-500/25`; hover `scale-105` + border lightening |
-| Completion feedback | Web Audio chime (C5→E5→G5 sine arpeggio, 0.35s) when `soundEnabled`; title strike-through; card border turns emerald |
-| All-done celebration | Two-sided confetti stream (emerald/cyan palette, 3 particles per side per frame) for 1.2s + rising "streak" chime (D5→A5, 0.5s) |
-| Onboarding complete | Single 80-particle confetti burst (spread 70, origin y 0.7, multi-color) |
-| Freeze applied | Descending chime (A4→F4, 0.4s) |
-| Modal entrance | `animate-in fade-in zoom-in-95 duration-200` — implemented via a Tailwind v4 `@theme` `--animate-in` token (`hf-enter` keyframes) plus composable `@utility` state setters (`fade-in`, `zoom-in-95`, `slide-in-from-bottom-2`). No external `tailwindcss-animate` plugin. |
+| Checkbox check | `animate-pop`; checked fill = lime + ink check |
+| Completion feedback | Web Audio chime (C5→E5→G5) when `soundEnabled`; title strike-through; card → accent-soft |
+| All-done celebration | Two-sided confetti (brand ramp) 1.2s + rising chime |
+| Onboarding complete | 80-particle confetti burst (brand ramp) |
+| Freeze applied | Descending chime (A4→F4) |
 | Progress ring | `transition-all duration-500 ease-out` on `stroke-dashoffset` |
 | Category bars | `transition-all duration-700 ease-out` width |
-| Hover/active states | Buttons: `hover:bg-*` lightening + `active:scale-95`/`active:scale-[0.98]`; cards: border lightening; heatmap cells: `hover:scale-125`; generic `transition` (~150ms default) |
-| Date chip selection | `scale-105` + glow on selected; smooth `scrollIntoView({behavior:'smooth'})` centering |
-| Offline toast | `animate-in slide-in-from-bottom-2` |
+| Hover/active | Buttons `hover:bg-*` + `active:scale-95`/`[0.98]`; cards border-darkening + `shadow-elevated`; heatmap `hover:scale-125`; generic `transition` |
+| Date chip | `scale-105` on selected + smooth `scrollIntoView` centering |
+| Toast | `animate-in slide-in-from-bottom-2` |
 | Skeleton | `animate-pulse` |
 
-### 5.2 Reduced-Motion Support
+All motion is **subtle** and short (≤300ms), consistent with the calm Premium
+Light character.
 
-**Implemented.** A `prefers-reduced-motion: reduce` strategy is in place:
+### 5.3 Reduced-motion support
+- Confetti triggers check `matchMedia('(prefers-reduced-motion: reduce)')` and
+  skip entirely.
+- A global CSS block collapses animation/transition durations to `0.001ms` and
+  sets `scroll-behavior: auto` under the media query.
+- Audio chimes remain governed by the independent `soundEnabled` setting.
 
-- Confetti triggers (`src/utils/confetti.ts`) check `matchMedia('(prefers-reduced-motion: reduce)')` and skip entirely when reduced motion is requested.
-- A global CSS block in `src/index.css` collapses animation and transition durations to `0.001ms` under the media query, neutralizing `animate-in`, `animate-pulse`, and non-essential transitions.
-- Audio chimes remain governed by the independent `soundEnabled` setting (not tied to motion preference).
-
-### 5.3 Interaction Rules
-
-- All touch targets ≥ 44×44px for primary controls (checkbox wrapper enforces this with negative margin `-m-2`; bottom nav is `h-16`; primary CTAs are `py-3`). Dense data-viz controls (heatmap cells, day-letter toggles) are smaller by necessity but carry full `aria-label`s.
-- `-webkit-tap-highlight-color: transparent` globally; mobile date strip is `select-none`.
-- Every clickable element uses an explicit `cursor-pointer` (Tailwind v4 preflight no longer defaults buttons to pointer).
-- Menus close on mouse-leave. Modals are accessible dialogs (`useModalA11y`): `role="dialog"` + `aria-modal`, initial focus (autofocus field or first control), Tab focus-trapping, focus restoration to the invoking element on close, and dismiss via **Escape key or backdrop click** (in addition to explicit Cancel/Close buttons). The mandatory onboarding gate traps focus but cannot be dismissed.
-- Destructive actions (habit delete, clear-all-data) route through an accessible `ConfirmDialog` (`role="alertdialog"`) that explains the cascade before confirming — no `window.confirm`.
+### 5.4 Interaction & accessibility rules (WCAG 2.2 AA)
+- Touch targets ≥44×44px for primary controls (`min-h-[44px]` CTAs, checkbox
+  wrapper, `h-16` bottom nav). Dense data-viz controls are smaller by necessity
+  but carry full `aria-label`s.
+- Global `:focus-visible` outline: `2px solid var(--color-focus)`,
+  `outline-offset: 2px` (WCAG 2.4.11).
+- Toggle/selection buttons expose state via `aria-pressed` (sound, freeze
+  reasons, import mode, archive); date chips via `aria-current="date"`; menus via
+  `role="menu"`/`menuitem` + `aria-expanded`/`aria-haspopup`.
+- Contrast: all body text uses `ink`/`ink-secondary` (AA+); `ink-muted` is
+  large/decorative only; lime is fill-only with ink text (§1.3); the progress arc
+  uses `success-fill` for non-text contrast.
+- `-webkit-tap-highlight-color: transparent` globally; mobile date strip
+  `select-none`; every clickable element sets `cursor-pointer`.
+- Destructive actions route through an accessible `ConfirmDialog`
+  (`role="alertdialog"`) explaining the cascade — no `window.confirm`.
 
 ---
 
 ## 6. Design Principles (guardrails for future work)
 
-1. **Dark navy + emerald only.** No light theme, no glassmorphism beyond the existing header/overlay `backdrop-blur`, no new gradients beyond the two brand gradients.
-2. **Emerald = action & success; sky = protection/freeze/info; amber = streaks & warnings; rose = danger.** Never cross-wire these semantics.
-3. **Numbers are mono.** Any statistic, date, time, or counter uses `font-mono` (+ `tabular-nums` in tables/rows).
-4. **Tinted, not solid.** Secondary surfaces use alpha tints (`/10`–`/20`) of accent colors with matching tinted borders — never full-saturation backgrounds except primary CTAs.
-5. **Consistent shell.** Every modal follows the §4.7 header/footer pattern; every card uses `rounded-2xl`/`rounded-3xl` + `border-slate-800` family.
-6. **Mobile thumb zone.** Primary navigation and the offline toast respect the bottom nav area (`bottom-20`, `pb-24`).
+1. **Premium Light only.** No dark mode, no theme switcher, no `dark:` variants,
+   no system-theme switching. Build with semantic tokens (`bg-bg`, `text-ink`,
+   `bg-accent`, `border-border`, semantic families) — never raw HEX or palette
+   utilities.
+2. **Lime is a fill, never text on white.** Ink (`#20251F`) on lime; green text
+   uses `accent-text` (`#3F6B12`) or `success`.
+3. **Semantics are fixed.** accent/success = action & achievement; info =
+   freeze/protection/notice; warning = streaks, missed, archived, offline;
+   error = destructive & negative deltas; neutral = rest/flat. Never cross-wire.
+4. **Numbers are sans + `tabular-nums`.** Mono is reserved for the backup grid
+   and timezone only.
+5. **Soft, warm, shadow-differentiated.** Surfaces are white/paper; elevation
+   comes from `--shadow-*` (ink-tinted), not borders-with-alpha or dark glows. No
+   glassmorphism beyond the header/overlay `backdrop-blur`; no decorative
+   gradients or blur glows.
+6. **Consistent shell.** Every modal follows §4.7; every card uses
+   `rounded-2xl`/`rounded-3xl` + `border-border` + `shadow-card`.
+7. **Preserve the product.** HabitFlow branding, desktop top-nav + mobile
+   bottom-tab nav (no sidebar), all functionality, user data, and localStorage
+   keys/schemas are untouched by visual work.
+8. **Mobile thumb zone.** Navigation and the offline indicator respect the bottom
+   nav area (`bottom-20`, `pb-24`).
