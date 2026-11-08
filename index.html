@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>HabitFlow PWA - Habit Tracker & Streak Analytics</title>
+    <meta name="description" content="Mobile-first Progressive Web App habit tracker with streak freeze protection, interactive micro-journaling, GitHub-style activity heatmaps, and local-first offline storage." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="HabitFlow PWA - Habit Tracker & Streak Analytics" />
+    <meta property="og:description" content="Mobile-first Progressive Web App habit tracker with streak freeze protection, interactive micro-journaling, GitHub-style activity heatmaps, and local-first offline storage." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- PWA Settings -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#020617" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="HabitFlow" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <!-- Fonts are self-hosted (see src/main.tsx) so the app works fully offline. -->
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased min-h-screen selection:bg-emerald-500/20 selection:text-emerald-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

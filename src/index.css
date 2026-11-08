@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Typography — self-hosted variable fonts (see src/main.tsx) */
+  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Surface hierarchy: background -> surface -> elevated -> interactive.
+     These extend the slate scale so every screen shares one visual language. */
+  --color-surface-base: #020617;        /* slate-950 — app background */
+  --color-surface: #0f172a;             /* slate-900 — cards / panels */
+  --color-surface-elevated: #172033;    /* between slate-800/900 — raised surfaces */
+  --color-surface-interactive: #1e293b; /* slate-800 — hover / controls */
+
+  /* Fill the gaps in the slate ramp used across the UI (were previously
+     invalid classes: bg-slate-850, hover:bg-slate-750). */
+  --color-slate-750: #293548;
+  --color-slate-850: #172033;
+
+  /* Motion tokens (Tailwind v4 generates animate-* utilities from these) */
+  --animate-in: hf-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-rise: hf-rise 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Enter animation: composed via the fade-in / zoom-in-* / slide-in-* utilities
+   below, which set the custom properties this keyframe reads. */
+@keyframes hf-enter {
+  from {
+    opacity: var(--hf-enter-opacity, 1);
+    transform: translate3d(var(--hf-enter-x, 0), var(--hf-enter-y, 0), 0)
+      scale(var(--hf-enter-scale, 1));
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes hf-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.5rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Composable enter-state utilities (replaces the unavailable
+   tailwindcss-animate plugin classes with real, v4-native definitions). */
+@utility fade-in {
+  --hf-enter-opacity: 0;
+}
+@utility zoom-in-95 {
+  --hf-enter-scale: 0.95;
+}
+@utility slide-in-from-bottom-2 {
+  --hf-enter-y: 0.5rem;
+}
+
+/* Hide horizontal scrollbars while keeping the region scrollable */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Bottom padding that respects the device home-indicator safe area */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@layer base {
+  html, body {
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: normal;
+    word-spacing: normal;
+  }
+
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.4);
+  }
+}
+
+/* Respect reduced-motion preferences across the whole app */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
