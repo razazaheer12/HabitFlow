@@ -63,8 +63,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComp
           </div>
 
           <p className="text-sm text-ink-secondary mb-6 leading-relaxed">
-            Track daily progress, preserve streaks on busy days with streak freezes, and micro-journal
-            reflections. Everything stays 100% private on your device — no account required.
+          Simple daily tracking, built around your routine.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
@@ -118,15 +117,11 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComp
 
             <button
               type="submit"
-              className="w-full mt-2 h-12 rounded-xl bg-accent hover:bg-accent-hover active:scale-[0.98] text-ink-on-accent font-semibold text-sm flex items-center justify-center gap-2 shadow-card transition-all cursor-pointer"
+              className="cta-primary w-full mt-2 h-12 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Get Started</span>
               <ArrowRight className="w-4 h-4" />
             </button>
-
-            <p className="text-xs text-ink-secondary text-center leading-relaxed">
-              You'll start with a clean dashboard — create your first habit in one tap.
-            </p>
           </form>
         </div>
       </div>

@@ -71,7 +71,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
         {/* Stat 1: Today's Completion Rate */}
-        <div className="p-3 sm:p-4 rounded-2xl bg-surface border border-border shadow-card flex items-center justify-between">
+        <div className="p-3 sm:p-4 rounded-2xl bg-surface border border-border shadow-card flex items-center justify-between gap-2 sm:gap-3">
           <div className="space-y-0.5 min-w-0">
             <span className="text-xs font-medium text-ink-secondary block truncate">Completion</span>
             <div className="text-xl sm:text-[28px] sm:leading-9 font-extrabold text-ink tabular-nums">
@@ -82,8 +82,8 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({
             </span>
           </div>
 
-          <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0">
-            <svg className="w-10 h-10 sm:w-12 sm:h-12 -rotate-90" viewBox="0 0 60 60">
+          <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center shrink-0">
+            <svg className="w-8 h-8 sm:w-12 sm:h-12 -rotate-90" viewBox="0 0 60 60">
               <circle
                 cx="30"
                 cy="30"

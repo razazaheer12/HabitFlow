@@ -288,7 +288,7 @@ than the retired cool slate glaze.
 | Date carousel chip | `min-w-[48px] rounded-2xl border` |
 | Heatmap cell | `w-3.5 h-3.5 sm:w-4 sm:h-4` |
 | Bottom nav | `h-16`, `grid-cols-4`, icons `w-5 h-5`, labels `text-xs` |
-| Progress ring SVG | `w-10 h-10 sm:w-12 sm:h-12`, `viewBox 0 0 60 60`, `r=24`, `strokeWidth=4.5`, `-rotate-90`; track `stroke-bg-secondary`, arc `stroke-success-fill` |
+| Progress ring SVG | `w-8 h-8 sm:w-12 sm:h-12`, `viewBox 0 0 60 60`, `r=24`, `strokeWidth=4.5`, `-rotate-90`; track `stroke-bg-secondary`, arc `stroke-success-fill` |
 
 ### 3.6 Responsive breakpoints (Tailwind defaults)
 
@@ -335,7 +335,11 @@ active, else `bg-surface border-border text-ink-secondary`, `min-h-[44px]`).
 Three stat cards: `bg-surface border-border shadow-card rounded-2xl`, values
 `text-xl sm:text-[28px] font-extrabold text-ink tabular-nums`. Completion card
 includes the SVG progress ring (track `stroke-bg-secondary`, arc
-`stroke-success-fill`). Streak chip = warning family; habits chip = accent-soft.
+`stroke-success-fill`) in a `flex items-center justify-between gap-2 sm:gap-3`
+row; its ring box is `w-8 h-8 sm:w-12 sm:h-12` so the value and the ring keep a
+visible gap inside the narrow 3-column mobile grid (the other two cards' icon
+chips are `w-8 h-8 sm:w-10 sm:h-10`). Streak chip = warning family; habits chip
+= accent-soft.
 
 ### 4.4 Date carousel (`DateCarousel.tsx`)
 Prev/next `w-10 h-10 bg-surface border-border text-ink-secondary`. Chips carry
@@ -402,8 +406,10 @@ not dismissible.
 All interactive elements carry `cursor-pointer` and `transition`. The
 `cta-primary` utility (defined in `src/index.css`) is reserved for the five
 habit-creation entry points — header "Add Habit", Habits "New Habit", library
-empty-state "Create Habit", Today empty-schedule "Add a New Habit", and
-first-run "Create Your First Habit". No other button is rendered rich black.
+empty-state "Create Habit", Today empty-schedule "Add a New Habit", first-run
+"Create Your First Habit" — plus the onboarding "Get Started" submit
+(`OnboardingModal.tsx`, `h-12 rounded-xl` with a white `ArrowRight`). No other
+button is rendered rich black.
 
 ### 4.9 Form controls (`HabitForm.tsx`, `SettingsModal.tsx`, `OnboardingModal.tsx`)
 Inputs: `bg-surface border-border-strong text-ink placeholder-ink-muted
