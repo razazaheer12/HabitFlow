@@ -29,8 +29,7 @@ export const AnalyticsPage: React.FC = () => {
           <div>
             <h1 className="text-2xl font-bold text-ink tracking-tight">Your Progress</h1>
             <p className="text-sm text-ink-secondary mt-0.5 max-w-xl leading-relaxed">
-              Consistency, period trends and category breakdown — measured in scheduled check-ins,
-              not habits created.
+              Track your consistency and progress over time.
             </p>
           </div>
         </div>

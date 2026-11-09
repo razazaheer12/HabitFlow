@@ -113,7 +113,7 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
             </div>
             <div>
               <h2 className="text-base font-bold text-ink tracking-tight">Consistency Heatmap</h2>
-              <p className="text-xs text-ink-secondary">Completion density percentage per eligible scheduled day</p>
+              <p className="text-xs text-ink-secondary">Daily completion activity</p>
             </div>
           </div>
 
