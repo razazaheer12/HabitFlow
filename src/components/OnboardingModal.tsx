@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, User, Calendar, ArrowRight } from 'lucide-react';
+import { User, Calendar, ArrowRight } from 'lucide-react';
 import { UserProfile } from '../types';
 import { useModalA11y } from './useModalA11y';
 
@@ -55,9 +55,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComp
       >
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-2xl bg-accent-soft border border-accent-border flex items-center justify-center text-accent-text">
-              <Sparkles className="w-5 h-5" />
-            </div>
+            <img src="/logo.png" alt="" aria-hidden="true" className="w-10 h-10 object-contain select-none" />
             <div>
               <span className="text-xs font-semibold tracking-[0.08em] uppercase text-accent-text">Welcome to HabitFlow</span>
               <h2 id="onboarding-title" className="text-2xl font-bold text-ink tracking-tight">Build Lasting Habits</h2>

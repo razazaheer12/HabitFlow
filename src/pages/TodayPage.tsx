@@ -156,7 +156,7 @@ export const TodayPage: React.FC = () => {
                 </div>
                 <button
                   onClick={() => navigate('/habits/new', { state: { from: 'today' } })}
-                  className="px-4 py-2 rounded-xl bg-accent text-ink-on-accent text-xs font-semibold hover:bg-accent-hover active:scale-[0.98] transition cursor-pointer inline-flex items-center gap-1.5 shadow-card"
+                  className="cta-primary px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer inline-flex items-center gap-1.5"
                 >
                   <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
                   <span>Add a New Habit</span>

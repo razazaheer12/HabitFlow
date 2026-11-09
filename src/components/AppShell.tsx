@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { CheckSquare, BarChart2, ListTodo, Settings, Plus, Sparkles } from 'lucide-react';
+import { CheckSquare, BarChart2, ListTodo, Settings, Plus } from 'lucide-react';
 import { useAppState } from '../state/AppStateContext';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 import { TodayPage } from '../pages/TodayPage';
@@ -58,9 +58,7 @@ export const AppShell: React.FC = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 sm:gap-8 px-4 sm:px-8 py-2.5">
           {/* Zone 1: Brand */}
           <div className="flex items-center gap-2.5 whitespace-nowrap shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center text-ink-on-accent shadow-card">
-              <Sparkles className="w-5 h-5" strokeWidth={2.25} />
-            </div>
+            <img src="/logo.png" alt="" aria-hidden="true" className="w-9 h-9 object-contain select-none" />
             <NavLink to="/" className="text-lg font-extrabold text-ink tracking-tight">
               HabitFlow
             </NavLink>
@@ -87,7 +85,7 @@ export const AppShell: React.FC = () => {
             <PWAInstallButton onOpenModal={openPWAInstallModal} />
             <button
               onClick={() => navigate('/habits/new')}
-              className="flex items-center gap-1.5 px-3.5 rounded-xl bg-accent hover:bg-accent-hover active:scale-[0.98] text-ink-on-accent text-sm font-semibold shadow-card transition cursor-pointer whitespace-nowrap h-11"
+              className="cta-primary flex items-center gap-1.5 px-3.5 rounded-xl text-sm font-semibold cursor-pointer whitespace-nowrap h-11"
             >
               <Plus className="w-4 h-4" strokeWidth={2.75} />
               <span className="hidden sm:inline">Add Habit</span>

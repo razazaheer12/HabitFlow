@@ -1,6 +1,6 @@
 # HabitFlow — Design System
 
-**Version:** 3.0 (Phase 3 — Premium Light Redesign)
+**Version:** 3.1 (Phase 3 — Premium Light Redesign + final branding/CTA polish)
 **Status:** Reflects the visual identity as implemented in source after the Phase 3 Premium Light transformation.
 
 > **Premium Light is the only supported theme. There is no Dark Mode.**
@@ -57,11 +57,25 @@ pastel category palette harmonized to the lime.
 | Accent soft | `--color-accent-soft` / `bg-accent-soft` | `#F1F8E5` | Soft highlight bg, success tint, active nav tint, icon chips |
 | Accent border | `--color-accent-border` / `border-accent-border` | `#CDE8A0` | Borders on accent-soft surfaces |
 | Forest | `--color-forest` / `bg-forest` | `#263629` | Deep brand green: focus rings, dark icon chips, secondary toggle fills |
+| CTA fill | `--color-cta` / `cta-primary` | `#171A16` | Rich-black fill for the **Add Habit** CTA only |
+| CTA hover | `--color-cta-hover` | `#262B24` | Hover on the CTA fill (slightly lighter black) |
+| CTA active | `--color-cta-active` | `#0F110E` | Pressed state on the CTA fill |
+| CTA ink | `--color-cta-ink` | `#FFFFFF` | Label + plus icon on the CTA fill |
 
 > **Accessibility rule (non-negotiable):** the lime `#B8E65A` is a **fill only —
 > never text on white** (as text it is 1.34:1 and fails). Text/icons placed on a
 > lime fill always use `ink` (`#20251F`, 9.71:1). Any green *text* on a light
 > surface uses `accent-text` (`#3F6B12`, 5.35:1) or the semantic `success` ink.
+
+> **Brand mark:** the official HabitFlow logo — a lime circle with a bold black
+> checkmark — is the only brand identifier. Source artwork lives at
+> `design-assets/HabitFlow-logo-source.png`; generated variants in `public/`
+> (`favicon.png` 48, `logo.png` 256 for in-app use, `apple-touch-icon.png` 180,
+> `pwa-192x192.png`, `pwa-512x512.png`, `pwa-maskable-512x512.png`). In-app
+> variants are transparent PNGs rendered with `object-contain`; home-screen /
+> maskable variants are composited on paper `#F8F9F5`. It is never stretched,
+> cropped or recolored, and it never replaces functional checkmarks or habit
+> completion indicators (those stay `lucide-react`).
 
 ### 1.4 Borders, focus & selection
 
@@ -265,7 +279,7 @@ than the retired cool slate glaze.
 
 | Component | Value |
 |---|---|
-| Header "Add Habit" | `h-11 rounded-xl bg-accent text-ink-on-accent shadow-card` |
+| Header "Add Habit" | `h-11 rounded-xl cta-primary` (rich black, white label/icon) |
 | Settings icon link | `w-11 h-11 bg-surface border-border` |
 | Icon-only buttons | `w-8 h-8`/`w-10 h-10 rounded-xl bg-surface/bg-bg-secondary` |
 | Checkbox touch target | ≥44px wrapper around a `w-7 h-7 rounded-[10px] border-2` box |
@@ -299,12 +313,13 @@ tooltips · `z-[60]` toast stack · offline indicator.
 
 ### 4.1 Top navigation bar (`AppShell.tsx` header)
 Sticky, `bg-bg/85 backdrop-blur-md border-b border-border`. Three-zone contract:
-**(1)** brand tile (`w-9 h-9 rounded-xl bg-accent text-ink-on-accent shadow-card`
-+ `Sparkles`) + wordmark (`text-ink tracking-tight`); **(2)** pill nav links —
+**(1)** brand mark (`w-9 h-9 object-contain` render of `/logo.png`) + wordmark
+(`text-ink tracking-tight`); **(2)** pill nav links —
 active `bg-accent-soft text-ink`, inactive `text-ink-secondary hover:text-ink
-hover:bg-bg-secondary` (`rounded-full`); **(3)** PWA install button + lime "Add
-Habit" button + settings icon link. Nav hidden `< md`. The header "Add Habit" is
-the single persistent primary create action. **No sidebar.**
+hover:bg-bg-secondary` (`rounded-full`); **(3)** PWA install button + rich-black
+"Add Habit" CTA (`cta-primary`) + settings icon link. Nav hidden `< md`. The
+header "Add Habit" is the single persistent primary create action — icon-only
+below `sm`. **No sidebar.**
 
 ### 4.2 Bottom mobile navigation (`AppShell.tsx`)
 Fixed, `md:hidden`, `bg-surface/95 backdrop-blur-lg border-t border-border`, 4
@@ -373,6 +388,7 @@ not dismissible.
 
 | Variant | Classes |
 |---|---|
+| Primary CTA (Add Habit only) | `cta-primary rounded-xl font-semibold/bold` — rich black `#171A16`, white label + plus icon, no border, `shadow-card`, hover `#262B24` + `shadow-elevated`, active `#0F110E` + `scale-[0.98]`, `focus-visible` 2px lime `--color-accent` ring (offset 2px), disabled `disabled-bg`/`disabled` ink with no shadow |
 | Primary | `bg-accent hover:bg-accent-hover text-ink-on-accent font-bold/semibold rounded-xl shadow-card` |
 | Secondary | `bg-surface hover:bg-bg-secondary text-ink border border-border-strong rounded-xl font-semibold` |
 | Ghost | `bg-bg-secondary hover:bg-border text-ink-secondary rounded-xl` |
@@ -383,7 +399,11 @@ not dismissible.
 | Segmented control | Track `bg-bg-secondary p-1 border-border`; active `bg-accent text-ink-on-accent shadow-card` (forest variant `bg-forest text-white` in the category-breakdown toggle) |
 | Filter chip | Active `bg-accent text-ink-on-accent shadow-card`; inactive `bg-surface text-ink-secondary border-border hover:border-border-strong` |
 
-All interactive elements carry `cursor-pointer` and `transition`.
+All interactive elements carry `cursor-pointer` and `transition`. The
+`cta-primary` utility (defined in `src/index.css`) is reserved for the five
+habit-creation entry points — header "Add Habit", Habits "New Habit", library
+empty-state "Create Habit", Today empty-schedule "Add a New Habit", and
+first-run "Create Your First Habit". No other button is rendered rich black.
 
 ### 4.9 Form controls (`HabitForm.tsx`, `SettingsModal.tsx`, `OnboardingModal.tsx`)
 Inputs: `bg-surface border-border-strong text-ink placeholder-ink-muted
@@ -436,13 +456,15 @@ centered `bg-bg-secondary text-ink-muted` icon tile, `text-ink` title,
 date", empty library, empty analytics, and `NotFoundPage` (404 in `text-ink/10`).
 
 ### 4.15 Skeleton / loading state (`App.tsx`)
-Full-screen `bg-bg text-ink` centered pulsing brand tile (`bg-accent
-text-ink-on-accent`) + wordmark + `text-ink-muted` "Loading your routine…",
+Full-screen `bg-bg text-ink` centered pulsing brand mark (`w-12 h-12` render of
+`/logo.png`) + wordmark + `text-ink-muted` "Loading your routine…",
 shown until localStorage hydration completes.
 
 ### 4.16 Iconography
-`lucide-react` exclusively. Sizes `w-3`–`w-6`. Emphasis via `stroke-[2.5]` /
-`stroke-[3]`. Category icons per §1.6.
+`lucide-react` exclusively for functional/UI icons. Sizes `w-3`–`w-6`. Emphasis
+via `stroke-[2.5]` / `stroke-[3]`. Category icons per §1.6. The HabitFlow brand
+mark is the only non-lucide image (see §1.3 "Brand mark"); decorative `Sparkles`
+accents in empty states and the micro-journal are not brand marks and remain.
 
 ### 4.17 Scrollbars
 Global webkit scrollbar 8px, transparent track, thumb `rgba(32,37,31,0.16)` →

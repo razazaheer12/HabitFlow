@@ -19,13 +19,14 @@
  * mixed with a new worker's caches.
  */
 
-const CACHE_NAME = 'habitflow-cache-v5';
+const CACHE_NAME = 'habitflow-cache-v6';
 const CACHE_PREFIX = 'habitflow-cache';
 const ASSETS_TO_PRECACHE = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon.svg',
+  '/favicon.png',
+  '/logo.png',
   '/pwa-192x192.png',
   '/pwa-512x512.png',
   '/pwa-maskable-512x512.png',

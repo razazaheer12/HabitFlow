@@ -5,7 +5,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
 
 import {
   Habit,
@@ -492,9 +491,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-bg text-ink flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-3 animate-pulse">
-          <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center text-ink-on-accent shadow-card">
-            <Sparkles className="w-6 h-6" strokeWidth={2.25} />
-          </div>
+          <img src="/logo.png" alt="" aria-hidden="true" className="w-12 h-12 object-contain" />
           <div className="text-base font-extrabold text-ink">HabitFlow</div>
           <div className="text-xs text-ink-muted">Loading your routine...</div>
         </div>

@@ -30,7 +30,7 @@ export const FirstRunEmptyState: React.FC<FirstRunEmptyStateProps> = ({
         <button
           type="button"
           onClick={onCreateFirstHabit}
-          className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-xl bg-accent hover:bg-accent-hover active:scale-[0.98] text-ink-on-accent text-sm font-bold shadow-card transition cursor-pointer"
+          className="cta-primary inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-xl text-sm font-bold cursor-pointer"
         >
           <Plus className="w-4 h-4" strokeWidth={2.5} />
           <span>Create Your First Habit</span>

@@ -41,6 +41,12 @@
   --color-accent-border: #CDE8A0;      /* borders on accent-soft surfaces */
   --color-forest: #263629;             /* deep brand green: focus rings, dark icon chips */
 
+  /* ---- Primary CTA (rich black) — Add Habit action only ---- */
+  --color-cta: #171A16;                /* primary habit-creation CTA fill */
+  --color-cta-hover: #262B24;          /* hover: slightly lighter black */
+  --color-cta-active: #0F110E;         /* pressed */
+  --color-cta-ink: #FFFFFF;            /* label + icon on the CTA fill */
+
   /* ---- Borders, focus & selection ---- */
   --color-border: #E8EBE3;             /* default card/panel/input borders, dividers */
   --color-border-strong: #D8DDD0;      /* input borders, hovered borders, control outlines */
@@ -199,6 +205,40 @@
 /* Bottom padding that respects the device home-indicator safe area */
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Rich-black primary CTA. Reserved for the habit-creation action only —
+   every other button keeps its existing surface/accent styling. */
+@utility cta-primary {
+  background-color: var(--color-cta);
+  color: var(--color-cta-ink);
+  border: none;
+  box-shadow: var(--shadow-card);
+  transition: background-color 150ms ease-out, box-shadow 150ms ease-out, transform 100ms ease-out;
+
+  &:hover {
+    background-color: var(--color-cta-hover);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  &:active {
+    background-color: var(--color-cta-active);
+    box-shadow: var(--shadow-card);
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background-color: var(--color-disabled-bg);
+    color: var(--color-disabled);
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+  }
 }
 
 @layer base {

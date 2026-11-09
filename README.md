@@ -51,7 +51,8 @@ src/
 public/
   manifest.json        PWA manifest
   sw.js                Service worker (app-shell caching, offline fallback)
-  *.png, icon.svg      PWA icons (any + maskable)
+  favicon.png, logo.png            Brand mark (in-app + tab icon)
+  apple-touch-icon.png, pwa-*.png  PWA icons (any + maskable)
 ```
 
 ## Offline & PWA

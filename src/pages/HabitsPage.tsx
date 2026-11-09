@@ -63,7 +63,7 @@ export const HabitsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate('/habits/new', { state: { from: 'habits' } })}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-accent hover:bg-accent-hover active:scale-95 text-ink-on-accent text-xs font-bold shadow-card transition cursor-pointer whitespace-nowrap min-h-[40px]"
+            className="cta-primary flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold cursor-pointer whitespace-nowrap min-h-[40px]"
           >
             <Plus className="w-3.5 h-3.5 stroke-[3]" />
             <span>New Habit</span>
@@ -133,7 +133,7 @@ export const HabitsPage: React.FC = () => {
           {!showArchived && !query && catFilter === 'all' && (
             <button
               onClick={() => navigate('/habits/new', { state: { from: 'habits' } })}
-              className="px-4 py-2 rounded-xl bg-accent hover:bg-accent-hover text-ink-on-accent text-xs font-bold transition cursor-pointer inline-flex items-center gap-1.5 shadow-card"
+              className="cta-primary px-4 py-2 rounded-xl text-xs font-bold cursor-pointer inline-flex items-center gap-1.5"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Create Habit</span>
