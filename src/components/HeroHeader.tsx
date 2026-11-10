@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Flame, ShieldAlert, BarChart3, CheckCircle2 } from 'lucide-react';
 import { getGreeting, formatDisplayDate, toLocalDateString } from '../domain/date';
 
 interface HeroHeaderProps {
@@ -137,7 +137,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = ({
           </div>
 
           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent-soft border border-accent-border flex items-center justify-center text-accent-text shrink-0">
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+            <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
       </div>

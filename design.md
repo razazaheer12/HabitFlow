@@ -338,8 +338,10 @@ includes the SVG progress ring (track `stroke-bg-secondary`, arc
 `stroke-success-fill`) in a `flex items-center justify-between gap-2 sm:gap-3`
 row; its ring box is `w-8 h-8 sm:w-12 sm:h-12` so the value and the ring keep a
 visible gap inside the narrow 3-column mobile grid (the other two cards' icon
-chips are `w-8 h-8 sm:w-10 sm:h-10`). Streak chip = warning family; habits chip
-= accent-soft.
+chips are `w-8 h-8 sm:w-10 sm:h-10`). Streak chip = warning family (`Flame` in
+`text-warning-fill` on `bg-warning-bg` + `border-warning-border`); habits chip =
+accent-soft (`BarChart3` in `text-accent-text` `#3F6B12` on `bg-accent-soft` +
+`border-accent-border`).
 
 ### 4.4 Date carousel (`DateCarousel.tsx`)
 Prev/next `w-10 h-10 bg-surface border-border text-ink-secondary`. Chips carry
