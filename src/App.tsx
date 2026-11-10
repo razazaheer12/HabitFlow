@@ -5,7 +5,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
 
 import {
   Habit,
@@ -372,15 +371,15 @@ export default function App() {
       confirmLabel: 'Delete Habit',
       variant: 'danger',
       description: (
-        <div className="space-y-2 text-sm text-slate-300">
+        <div className="space-y-2 text-sm text-ink-secondary">
           <p>This permanently removes the habit and all of its history. This cannot be undone.</p>
-          <ul className="space-y-1 text-xs text-slate-400 list-disc pl-5">
+          <ul className="space-y-1 text-xs text-ink-secondary list-disc pl-5">
             <li>{relatedLogs} completion {relatedLogs === 1 ? 'log' : 'logs'}</li>
             <li>{relatedNotes} journal {relatedNotes === 1 ? 'note' : 'notes'}</li>
             <li>{relatedFreezes} freeze {relatedFreezes === 1 ? 'record' : 'records'}</li>
             <li>All streak and analytics history tied to this habit</li>
           </ul>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-ink-muted">
             Tip: Archive instead if you want to keep the history but hide it from your routine.
           </p>
         </div>
@@ -490,13 +489,11 @@ export default function App() {
   // Skeleton screen while hydration completes
   if (!isHydrated) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-bg text-ink flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-3 animate-pulse">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-slate-950 font-black shadow-md shadow-emerald-500/20">
-            <Sparkles className="w-5 h-5 fill-slate-950" />
-          </div>
-          <div className="text-base font-extrabold text-white">HabitFlow</div>
-          <div className="text-xs text-slate-500">Loading your routine...</div>
+          <img src="/logo.png" alt="" aria-hidden="true" className="w-12 h-12 object-contain" />
+          <div className="text-base font-extrabold text-ink">HabitFlow</div>
+          <div className="text-xs text-ink-muted">Loading your routine...</div>
         </div>
       </div>
     );
@@ -542,12 +539,12 @@ export default function App() {
               confirmLabel: 'Clear Everything',
               variant: 'danger',
               description: (
-                <div className="space-y-2 text-sm text-slate-300">
+                <div className="space-y-2 text-sm text-ink-secondary">
                   <p>
                     This permanently deletes all habits, completion logs, journal notes and freeze
                     records from this device. Your profile and settings are kept.
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-ink-muted">
                     Export a JSON backup first if you might want to restore this data later.
                   </p>
                 </div>

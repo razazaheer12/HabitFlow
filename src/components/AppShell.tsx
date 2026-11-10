@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { CheckSquare, BarChart2, ListTodo, Settings, Plus, Sparkles } from 'lucide-react';
+import { CheckSquare, BarChart2, ListTodo, Settings, Plus } from 'lucide-react';
 import { useAppState } from '../state/AppStateContext';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 import { TodayPage } from '../pages/TodayPage';
@@ -12,13 +12,17 @@ import { OnboardingPage } from '../pages/OnboardingPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `hover:text-white transition whitespace-nowrap cursor-pointer ${
-    isActive ? 'text-emerald-400 font-bold' : 'text-slate-400'
+  `px-3 py-2 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer transition-colors ${
+    isActive
+      ? 'bg-accent-soft text-ink'
+      : 'text-ink-secondary hover:text-ink hover:bg-bg-secondary'
   }`;
 
 const mobileNavClass = ({ isActive }: { isActive: boolean }) =>
-  `flex flex-col items-center justify-center h-full transition cursor-pointer ${
-    isActive ? 'text-emerald-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+  `flex flex-col items-center justify-center h-full cursor-pointer transition-colors ${
+    isActive
+      ? 'text-ink font-semibold shadow-[inset_0_2px_0_0_var(--color-accent)]'
+      : 'text-ink-secondary'
   }`;
 
 /**
@@ -48,22 +52,20 @@ export const AppShell: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased selection:bg-emerald-500/20 selection:text-emerald-300">
+    <div className="min-h-screen bg-bg text-ink flex flex-col antialiased">
       {/* Top Bar (strict 3-zone contract) */}
-      <header className="sticky top-0 z-40 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-8 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-8">
+      <header className="sticky top-0 z-40 bg-bg/85 backdrop-blur-md border-b border-border">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 sm:gap-8 px-4 sm:px-8 py-2.5">
           {/* Zone 1: Brand */}
           <div className="flex items-center gap-2.5 whitespace-nowrap shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-slate-950 font-black shadow-md shadow-emerald-500/20">
-              <Sparkles className="w-4 h-4 fill-slate-950" />
-            </div>
-            <NavLink to="/" className="text-lg font-extrabold text-white">
+            <img src="/logo.png" alt="" aria-hidden="true" className="w-9 h-9 object-contain select-none" />
+            <NavLink to="/" className="text-lg font-extrabold text-ink tracking-tight">
               HabitFlow
             </NavLink>
           </div>
 
           {/* Zone 2: Desktop nav links */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-400">
+          <nav className="hidden md:flex items-center gap-1 text-sm">
             <NavLink to="/" className={navLinkClass} end>
               Today
             </NavLink>
@@ -79,28 +81,28 @@ export const AppShell: React.FC = () => {
           </nav>
 
           {/* Zone 3: Primary action & install */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <PWAInstallButton onOpenModal={openPWAInstallModal} />
             <button
               onClick={() => navigate('/habits/new')}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/20 transition cursor-pointer whitespace-nowrap min-h-[36px]"
+              className="cta-primary flex items-center gap-1.5 px-3.5 rounded-xl text-sm font-semibold cursor-pointer whitespace-nowrap h-11"
             >
-              <Plus className="w-3.5 h-3.5 stroke-[3]" />
+              <Plus className="w-4 h-4" strokeWidth={2.75} />
               <span className="hidden sm:inline">Add Habit</span>
             </button>
             <NavLink
               to="/settings"
               aria-label="Open Settings"
-              className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition cursor-pointer shrink-0"
+              className="w-11 h-11 rounded-xl bg-surface border border-border hover:border-border-strong flex items-center justify-center text-ink-secondary hover:text-ink transition cursor-pointer shrink-0"
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-5 h-5" />
             </NavLink>
           </div>
         </div>
       </header>
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 pb-24 md:pb-12">
+      {/* Main Container — full-bleed; each page owns its content max-width */}
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12">
         <Routes>
           <Route path="/" element={<TodayPage />} />
           <Route path="/today" element={<LegacyTodayRedirect />} />
@@ -115,23 +117,23 @@ export const AppShell: React.FC = () => {
       </main>
 
       {/* Mobile bottom tab bar (thumb-zone navigation) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-lg border-t border-slate-800 md:hidden pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-lg border-t border-border md:hidden pb-safe">
         <div className="grid grid-cols-4 items-center h-16 max-w-lg mx-auto">
           <NavLink to="/" className={mobileNavClass} end>
             <CheckSquare className="w-5 h-5" />
-            <span className="text-[11px] mt-1 font-medium">Today</span>
+            <span className="text-xs mt-1">Today</span>
           </NavLink>
           <NavLink to="/analytics" className={mobileNavClass}>
             <BarChart2 className="w-5 h-5" />
-            <span className="text-[11px] mt-1 font-medium">Analytics</span>
+            <span className="text-xs mt-1">Analytics</span>
           </NavLink>
           <NavLink to="/habits" className={mobileNavClass}>
             <ListTodo className="w-5 h-5" />
-            <span className="text-[11px] mt-1 font-medium">Habits</span>
+            <span className="text-xs mt-1">Habits</span>
           </NavLink>
           <NavLink to="/settings" className={mobileNavClass}>
             <Settings className="w-5 h-5" />
-            <span className="text-[11px] mt-1 font-medium">Settings</span>
+            <span className="text-xs mt-1">Settings</span>
           </NavLink>
         </div>
       </nav>

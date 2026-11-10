@@ -99,7 +99,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -110,14 +110,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         aria-modal="true"
         aria-labelledby="settings-modal-title"
         tabIndex={-1}
-        className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95"
+        className="w-full max-w-lg bg-surface border border-border rounded-3xl p-6 shadow-modal relative max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95"
       >
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-5">
-          <h2 id="settings-modal-title" className="text-xl font-bold text-white tracking-tight">App Settings & Data</h2>
+        <div className="flex items-center justify-between pb-3 border-b border-border mb-5">
+          <h2 id="settings-modal-title" className="text-xl font-bold text-ink tracking-tight">App Settings & Data</h2>
           <button
             onClick={onClose}
             aria-label="Close"
-            className="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+            className="w-8 h-8 rounded-xl bg-bg-secondary text-ink-muted hover:text-ink flex items-center justify-center transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -126,27 +126,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="space-y-6">
           {/* Profile Form */}
           <form onSubmit={handleSaveProfile} className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-accent-text flex items-center gap-1.5">
               <User className="w-3.5 h-3.5" />
               Personal Profile
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-2 space-y-1">
-                <label htmlFor="settings-name-input" className="text-xs font-medium text-slate-300">Name</label>
+                <label htmlFor="settings-name-input" className="text-xs font-medium text-ink-secondary">Name</label>
                 <input
                   id="settings-name-input"
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3.5 py-2 rounded-xl bg-surface border border-border-strong text-ink text-sm placeholder-ink-muted focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
                 />
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="settings-age-input" className="text-xs font-medium text-slate-300">
-                  Age <span className="text-slate-500 text-[11px]">(optional)</span>
+                <label htmlFor="settings-age-input" className="text-xs font-medium text-ink-secondary">
+                  Age <span className="text-ink-muted text-[11px]">(optional)</span>
                 </label>
                 <input
                   id="settings-age-input"
@@ -156,20 +156,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   placeholder="Optional"
                   value={age}
                   onChange={(e) => setAge(e.target.value ? Number(e.target.value) : '')}
-                  className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3.5 py-2 rounded-xl bg-surface border border-border-strong text-ink text-sm placeholder-ink-muted focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15"
                 />
               </div>
             </div>
 
             <div className="space-y-1">
-              <label htmlFor="settings-freeze-allowance" className="text-xs font-medium text-slate-300">
+              <label htmlFor="settings-freeze-allowance" className="text-xs font-medium text-ink-secondary">
                 Monthly Streak Freeze Allowance
               </label>
               <select
                 id="settings-freeze-allowance"
                 value={freezeAllowance}
                 onChange={(e) => setFreezeAllowance(Number(e.target.value))}
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 cursor-pointer"
+                className="w-full px-3.5 py-2 rounded-xl bg-surface border border-border-strong text-ink text-sm focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 cursor-pointer"
               >
                 <option value={2}>2 freezes per month (Strict)</option>
                 <option value={3}>3 freezes per month (Recommended)</option>
@@ -179,10 +179,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
             <div className="flex items-center justify-between pt-1">
-              <span className="text-xs text-slate-400">All data stored locally on your device</span>
+              <span className="text-xs text-ink-secondary">All data stored locally on your device</span>
               <button
                 type="submit"
-                className="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs transition cursor-pointer flex items-center gap-1.5"
+                className="px-4 py-1.5 rounded-xl bg-accent hover:bg-accent-hover text-ink-on-accent font-semibold text-xs transition cursor-pointer flex items-center gap-1.5 shadow-card"
               >
                 {saveSuccess ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : null}
                 <span>{saveSuccess ? 'Saved' : 'Update Profile'}</span>
@@ -191,16 +191,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </form>
 
           {/* Notifications & Reminders Limitations Banner */}
-          <div className="space-y-3 pt-4 border-t border-slate-800">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+          <div className="space-y-3 pt-4 border-t border-border">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-accent-text flex items-center gap-1.5">
               <Bell className="w-3.5 h-3.5" />
               Reminders & Audio
             </h3>
 
             {/* Reminder Architecture Limitation Banner */}
-            <div className="p-3 rounded-2xl bg-slate-800/50 border border-slate-700/60 text-xs text-slate-400 space-y-1">
-              <div className="flex items-center gap-1.5 text-slate-300 font-medium">
-                <Info className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+            <div className="p-3 rounded-2xl bg-info-bg border border-info-border text-xs text-ink-secondary space-y-1">
+              <div className="flex items-center gap-1.5 text-info font-medium">
+                <Info className="w-3.5 h-3.5 shrink-0" />
                 <span>Local-Only Architecture Notice</span>
               </div>
               <p className="leading-relaxed text-[11px]">
@@ -211,10 +211,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/60">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-bg-secondary border border-border">
               <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-white block">Push Notifications</span>
-                <span className="text-[11px] text-slate-400 block">
+                <span className="text-xs font-semibold text-ink block">Push Notifications</span>
+                <span className="text-[11px] text-ink-secondary block">
                   {notifGranted
                     ? 'Browser notification permission granted'
                     : 'Receive notifications at scheduled habit reminder times'}
@@ -225,7 +225,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="button"
                   onClick={() => sendLocalNotification('HabitFlow Reminder Test', 'This is a test reminder alert!')}
-                  className="px-3 py-1.5 rounded-xl bg-slate-700 text-xs font-medium text-slate-200 hover:text-white transition cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-surface border border-border-strong text-xs font-medium text-ink-secondary hover:text-ink transition cursor-pointer"
                 >
                   Test Alert
                 </button>
@@ -233,17 +233,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="button"
                   onClick={handleRequestNotifications}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-semibold transition cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-accent hover:bg-accent-hover text-ink-on-accent text-xs font-semibold transition cursor-pointer"
                 >
                   Enable
                 </button>
               )}
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/60">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-bg-secondary border border-border">
               <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-white block">Completion Audio Chimes</span>
-                <span className="text-[11px] text-slate-400 block">
+                <span className="text-xs font-semibold text-ink block">Completion Audio Chimes</span>
+                <span className="text-[11px] text-ink-secondary block">
                   Subtle audio feedback on habit check-off & streak milestones
                 </span>
               </div>
@@ -252,7 +252,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="button"
                   onClick={handleTestSound}
-                  className="px-2.5 py-1 rounded-lg bg-slate-700 text-[11px] text-slate-300 hover:text-white transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-surface border border-border-strong text-[11px] text-ink-secondary hover:text-ink transition cursor-pointer"
                 >
                   Preview
                 </button>
@@ -263,10 +263,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     setSoundEnabled(next);
                     onUpdateProfile({ soundEnabled: next });
                   }}
+                  aria-pressed={soundEnabled}
+                  aria-label={soundEnabled ? 'Mute completion chimes' : 'Enable completion chimes'}
                   className={`p-2 rounded-xl transition cursor-pointer ${
                     soundEnabled
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-slate-800 text-slate-500'
+                      ? 'bg-accent-soft text-accent-text border border-accent-border'
+                      : 'bg-surface text-ink-muted border border-border'
                   }`}
                 >
                   {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -276,19 +278,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* Habit Archive & Backup Management */}
-          <div className="space-y-3 pt-4 border-t border-slate-800">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+          <div className="space-y-3 pt-4 border-t border-border">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-accent-text flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5" />
               Data & Archives
             </h3>
 
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/60">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-bg-secondary border border-border">
               <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
-                  <Archive className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-xs font-semibold text-ink block flex items-center gap-1.5">
+                  <Archive className="w-3.5 h-3.5 text-warning" />
                   <span>Archived Habits ({archivedCount})</span>
                 </span>
-                <span className="text-[11px] text-slate-400 block">
+                <span className="text-[11px] text-ink-secondary block">
                   Show or hide archived habits in the library
                 </span>
               </div>
@@ -296,10 +298,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <button
                 type="button"
                 onClick={onToggleShowArchived}
+                aria-pressed={showArchived}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition cursor-pointer ${
                   showArchived
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                    : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white'
+                    ? 'bg-warning-bg text-warning border-warning-border'
+                    : 'bg-surface text-ink-secondary border-border-strong hover:text-ink'
                 }`}
               >
                 {showArchived ? 'Showing' : 'Hidden'}
@@ -312,15 +315,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 onClose();
                 onOpenBackupModal();
               }}
-              className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl bg-slate-800 hover:bg-slate-750 text-xs font-semibold text-white border border-slate-700 transition cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl bg-surface hover:bg-bg-secondary text-xs font-semibold text-ink border border-border-strong transition cursor-pointer"
             >
-              <Download className="w-4 h-4 text-emerald-400" />
+              <Download className="w-4 h-4 text-accent-text" />
               <span>Open JSON Backup & Recovery Panel</span>
             </button>
           </div>
 
           {/* Reset / Clear Data */}
-          <div className="pt-4 border-t border-slate-800">
+          <div className="pt-4 border-t border-border">
             <button
               type="button"
               onClick={() => {
@@ -328,7 +331,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 onResetData();
                 onClose();
               }}
-              className="w-full py-2.5 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-xs font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
+              className="w-full py-2.5 rounded-xl border border-error-border text-error hover:bg-error-bg text-xs font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Clear All Habits & Data</span>

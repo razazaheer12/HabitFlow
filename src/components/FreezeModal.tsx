@@ -43,7 +43,7 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -53,23 +53,23 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="freeze-modal-title"
-        className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative animate-in fade-in zoom-in-95"
+        className="w-full max-w-md bg-surface border border-border rounded-3xl p-6 shadow-modal relative animate-in fade-in zoom-in-95"
       >
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+        <div className="flex items-center justify-between pb-3 border-b border-border mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+            <div className="w-8 h-8 rounded-xl bg-info-bg border border-info-border flex items-center justify-center text-info-fill">
               <ShieldAlert className="w-4 h-4" />
             </div>
             <div>
-              <h3 id="freeze-modal-title" className="text-base font-bold text-white tracking-tight">Streak Freeze & Protection</h3>
-              <p className="text-xs text-slate-400">{formatDisplayDate(selectedDate)}</p>
+              <h3 id="freeze-modal-title" className="text-base font-bold text-ink tracking-tight">Streak Freeze & Protection</h3>
+              <p className="text-xs text-ink-secondary">{formatDisplayDate(selectedDate)}</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
             aria-label="Close"
-            className="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+            className="w-8 h-8 rounded-xl bg-bg-secondary text-ink-muted hover:text-ink hover:bg-border flex items-center justify-center transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -77,16 +77,16 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
 
         <div className="space-y-4">
           {/* Explanation Banner */}
-          <div className="p-3.5 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-xs text-sky-200 leading-relaxed">
+          <div className="p-3.5 rounded-2xl bg-info-bg border border-info-border text-xs text-info leading-relaxed">
             <span className="font-semibold block mb-0.5">How Streak Freeze Works:</span>
             Life happens! Freezing protects your hard-earned streak on sick or travel days. Your continuous streak score won't reset to zero.
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <span className="text-xs text-slate-300 font-medium">Monthly Freeze Allowance</span>
+          <div className="flex items-center justify-between p-3 rounded-xl bg-bg-secondary border border-border">
+            <span className="text-xs text-ink-secondary font-medium">Monthly Freeze Allowance</span>
             <span
-              className={`text-xs font-mono font-bold ${
-                remainingAllowance <= 0 ? 'text-rose-400' : 'text-sky-400'
+              className={`text-xs tabular-nums font-bold ${
+                remainingAllowance <= 0 ? 'text-error' : 'text-info'
               }`}
             >
               {remainingAllowance <= 0 ? 'No freezes left' : `${remainingAllowance} available`}
@@ -96,7 +96,7 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
           {exhausted && (
             <div
               role="alert"
-              className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-200 leading-relaxed"
+              className="p-3 rounded-2xl bg-error-bg border border-error-border text-xs text-error leading-relaxed"
             >
               You've used every freeze token for this month. Your allowance resets on the 1st.
               Existing freezes can still be deactivated.
@@ -105,7 +105,7 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
 
           {/* Current Status */}
           <div className="space-y-2">
-            <label className="text-xs font-medium text-slate-300 block">Select Reason</label>
+            <label className="text-xs font-medium text-ink-secondary block">Select Reason</label>
             <div className="grid grid-cols-2 gap-2">
               {REASONS.map((r) => {
                 const Icon = r.icon;
@@ -115,13 +115,14 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
                     key={r.id}
                     type="button"
                     onClick={() => setSelectedReason(r.label)}
-                    className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs text-left transition cursor-pointer ${
+                    aria-pressed={isSelected}
+                    className={`flex items-center gap-2 p-2.5 min-h-[44px] rounded-xl border text-xs text-left transition cursor-pointer ${
                       isSelected
-                        ? 'bg-sky-500/15 border-sky-500 text-white font-medium'
-                        : 'bg-slate-800/50 border-slate-800 text-slate-400 hover:text-slate-200'
+                        ? 'bg-info-bg border-info text-info font-semibold'
+                        : 'bg-surface border-border text-ink-secondary hover:border-border-strong hover:text-ink'
                     }`}
                   >
-                    <Icon className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-info-fill' : 'text-ink-muted'}`} />
                     <span>{r.label}</span>
                   </button>
                 );
@@ -133,7 +134,7 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer"
+              className="flex-1 py-2.5 min-h-[44px] rounded-xl bg-bg-secondary hover:bg-border text-ink-secondary hover:text-ink text-xs font-semibold transition cursor-pointer"
             >
               Cancel
             </button>
@@ -141,12 +142,12 @@ export const FreezeModal: React.FC<FreezeModalProps> = ({
               type="button"
               onClick={handleAction}
               disabled={exhausted}
-              className={`flex-1 py-2.5 rounded-xl text-xs font-semibold shadow-md transition ${
+              className={`flex-1 py-2.5 min-h-[44px] rounded-xl text-xs font-semibold shadow-card transition ${
                 exhausted
-                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed shadow-none'
+                  ? 'bg-disabled-bg text-disabled cursor-not-allowed shadow-none'
                   : isGloballyFrozen
-                  ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/20 cursor-pointer'
-                  : 'bg-sky-500 hover:bg-sky-400 text-slate-950 shadow-sky-500/20 font-bold cursor-pointer'
+                  ? 'bg-error hover:brightness-110 text-white cursor-pointer'
+                  : 'bg-info hover:brightness-110 text-white font-bold cursor-pointer'
               }`}
             >
               {isGloballyFrozen ? 'Deactivate Holiday Mode' : 'Activate Freeze Day'}

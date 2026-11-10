@@ -59,7 +59,7 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -70,16 +70,16 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
         aria-modal="true"
         aria-labelledby="micro-journal-title"
         tabIndex={-1}
-        className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative animate-in fade-in zoom-in-95"
+        className="w-full max-w-md bg-surface border border-border rounded-3xl p-6 shadow-modal relative animate-in fade-in zoom-in-95"
       >
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+        <div className="flex items-center justify-between pb-3 border-b border-border mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <div className="w-8 h-8 rounded-xl bg-accent-soft border border-accent-border flex items-center justify-center text-accent-text">
               <MessageSquare className="w-4 h-4" />
             </div>
             <div>
-              <h3 id="micro-journal-title" className="text-base font-bold text-white tracking-tight">Micro-Journal Note</h3>
-              <p className="text-xs text-slate-400">
+              <h3 id="micro-journal-title" className="text-base font-bold text-ink tracking-tight">Micro-Journal Note</h3>
+              <p className="text-xs text-ink-secondary">
                 {habit.title} · {formatDisplayDate(dateStr)}
               </p>
             </div>
@@ -88,7 +88,7 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
           <button
             onClick={onClose}
             aria-label="Close"
-            className="w-8 h-8 rounded-xl bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+            className="w-8 h-8 rounded-xl bg-bg-secondary text-ink-muted hover:text-ink hover:bg-border flex items-center justify-center transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -97,10 +97,10 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="micro-journal-input" className="text-xs font-semibold text-slate-300">
+              <label htmlFor="micro-journal-input" className="text-xs font-semibold text-ink-secondary">
                 1-Line Daily Reflection
               </label>
-              <span className="text-[11px] text-slate-500 font-mono">
+              <span className="text-xs text-ink-muted tabular-nums">
                 {noteText.length}/160
               </span>
             </div>
@@ -112,14 +112,14 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
               placeholder="e.g. Felt great, finished in 15 mins without distraction"
               value={noteText}
               onChange={(e) => setNoteText(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm resize-none transition"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-surface border border-border-strong text-ink placeholder-ink-muted focus:outline-none focus:border-forest focus:ring-2 focus:ring-forest/15 text-sm resize-none transition"
             />
           </div>
 
           {/* Quick Prompts */}
           <div className="space-y-1.5">
-            <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-emerald-400" />
+            <span className="text-xs font-medium text-ink-secondary flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-accent-text" />
               Quick Prompts
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -128,7 +128,7 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
                   key={prompt}
                   type="button"
                   onClick={() => setNoteText(prompt)}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-750 text-[11px] text-slate-300 hover:text-white border border-slate-700/60 transition cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-bg-secondary hover:bg-border text-xs text-ink-secondary hover:text-ink border border-border transition cursor-pointer"
                 >
                   {prompt}
                 </button>
@@ -136,12 +136,12 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
+          <div className="flex items-center justify-between gap-3 pt-3 border-t border-border">
             {initialNote ? (
               <button
                 type="button"
                 onClick={handleDelete}
-                className="px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+                className="px-3 py-2 rounded-xl text-error hover:bg-error-bg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Note</span>
@@ -150,7 +150,7 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-semibold transition cursor-pointer"
+                className="px-3 py-2 rounded-xl text-ink-secondary hover:text-ink text-xs font-semibold transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -158,9 +158,9 @@ export const MicroJournalModal: React.FC<MicroJournalModalProps> = ({
 
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-semibold shadow-md shadow-emerald-500/20 active:scale-95 transition cursor-pointer flex items-center gap-1.5"
+              className="px-5 py-2.5 min-h-[44px] rounded-xl bg-accent hover:bg-accent-hover text-ink-on-accent text-xs font-semibold shadow-card active:scale-[0.98] transition cursor-pointer flex items-center gap-1.5"
             >
-              <Check className="w-3.5 h-3.5 stroke-[3]" />
+              <Check className="w-3.5 h-3.5" strokeWidth={3} />
               <span>{initialNote ? 'Update Note' : 'Save Note'}</span>
             </button>
           </div>

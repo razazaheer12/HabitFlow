@@ -22,7 +22,7 @@ export const OnboardingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+    <div className="min-h-screen bg-bg flex items-center justify-center p-4">
       <OnboardingModal isOpen onComplete={handleComplete} />
     </div>
   );

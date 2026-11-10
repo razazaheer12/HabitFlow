@@ -42,7 +42,7 @@ export function sendLocalNotification(title: string, body: string): void {
         reg.showNotification(title, {
           body,
           icon: '/pwa-192x192.png',
-          badge: '/icon.svg',
+          badge: '/favicon.png',
           tag: 'habitflow-reminder'
         });
       });

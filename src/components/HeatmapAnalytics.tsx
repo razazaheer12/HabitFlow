@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, BarChart3, TrendingUp, TrendingDown, Minus, Award } from 'lucide-react';
-import { Habit, HabitLog, StreakFreeze, HeatmapDay, CATEGORIES } from '../types';
+import { Habit, HabitLog, StreakFreeze, HeatmapDay, HabitCategory, CATEGORIES } from '../types';
 import {
   calculatePercentageHeatmap,
   calculateCategoryBreakdown,
@@ -10,6 +10,14 @@ import {
   getBestPerformingCategory
 } from '../domain/analytics';
 import { formatDisplayDate } from '../domain/date';
+
+const CAT_DOT: Record<HabitCategory, string> = {
+  fitness: 'text-cat-fitness-icon',
+  mind: 'text-cat-mind-icon',
+  productivity: 'text-cat-productivity-icon',
+  learning: 'text-cat-learning-icon',
+  health: 'text-cat-health-icon'
+};
 
 interface HeatmapAnalyticsProps {
   habits: Habit[];
@@ -53,19 +61,19 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
 
   const getCellColor = (day: HeatmapDay) => {
     if (day.isFrozen) {
-      return 'bg-sky-500/50 hover:bg-sky-400 border border-sky-400/40';
+      return 'bg-heat-frozen hover:brightness-95 border border-heat-frozen-border';
     }
     switch (day.intensity) {
       case 4:
-        return 'bg-emerald-400 hover:bg-emerald-300 shadow-sm shadow-emerald-400/20';
+        return 'bg-heat-4 hover:brightness-95';
       case 3:
-        return 'bg-emerald-600 hover:bg-emerald-500';
+        return 'bg-heat-3 hover:brightness-95';
       case 2:
-        return 'bg-emerald-800 hover:bg-emerald-700';
+        return 'bg-heat-2 hover:brightness-95';
       case 1:
-        return 'bg-emerald-950/80 border border-emerald-800/40 hover:bg-emerald-900';
+        return 'bg-heat-1 hover:brightness-95';
       default:
-        return 'bg-slate-850 hover:bg-slate-800 border border-slate-800/60';
+        return 'bg-heat-0 hover:bg-border border border-border';
     }
   };
 
@@ -78,13 +86,13 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
   if (habits.length === 0) {
     return (
       <div className="w-full">
-        <div className="p-10 text-center rounded-3xl bg-slate-900/60 border border-slate-800/80 space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-500 mx-auto">
+        <div className="p-10 text-center rounded-3xl bg-surface border border-border shadow-card space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-bg-secondary flex items-center justify-center text-ink-muted mx-auto">
             <BarChart3 className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-white">No analytics yet</h2>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
+            <h2 className="text-sm font-semibold text-ink">No analytics yet</h2>
+            <p className="text-xs text-ink-secondary mt-1 max-w-sm mx-auto leading-relaxed">
               Your consistency heatmap, category breakdown, and week-over-week trends appear here
               once you create a habit and start logging completions.
             </p>
@@ -97,24 +105,24 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
   return (
     <div className="w-full space-y-6">
       {/* Heatmap Section */}
-      <div className="p-4 sm:p-6 rounded-3xl bg-slate-900/90 border border-slate-800/80 shadow-sm relative">
+      <div className="p-4 sm:p-6 rounded-3xl bg-surface border border-border shadow-card relative">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <div className="w-8 h-8 rounded-xl bg-accent-soft border border-accent-border flex items-center justify-center text-accent-text">
               <Calendar className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">Consistency Heatmap</h2>
-              <p className="text-xs text-slate-400">Completion density percentage per eligible scheduled day</p>
+              <h2 className="text-base font-bold text-ink tracking-tight">Consistency Heatmap</h2>
+              <p className="text-xs text-ink-secondary">Daily completion activity</p>
             </div>
           </div>
 
           {/* Range Selector */}
-          <div className="flex items-center gap-1 p-1 bg-slate-800/80 rounded-xl border border-slate-700/60 self-start sm:self-auto">
+          <div className="flex items-center gap-1 p-1 bg-bg-secondary rounded-xl border border-border self-start sm:self-auto">
             <button
               onClick={() => setRangeMode('3m')}
               className={`px-3 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${
-                rangeMode === '3m' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+                rangeMode === '3m' ? 'bg-accent text-ink-on-accent shadow-card' : 'text-ink-secondary hover:text-ink'
               }`}
             >
               3 Months
@@ -122,7 +130,7 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
             <button
               onClick={() => setRangeMode('6m')}
               className={`px-3 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${
-                rangeMode === '6m' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+                rangeMode === '6m' ? 'bg-accent text-ink-on-accent shadow-card' : 'text-ink-secondary hover:text-ink'
               }`}
             >
               6 Months
@@ -130,7 +138,7 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
             <button
               onClick={() => setRangeMode('1y')}
               className={`px-3 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${
-                rangeMode === '1y' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+                rangeMode === '1y' ? 'bg-accent text-ink-on-accent shadow-card' : 'text-ink-secondary hover:text-ink'
               }`}
             >
               Full Year
@@ -162,21 +170,21 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
             </div>
 
             {/* Heatmap Legend */}
-            <div className="flex items-center justify-between text-[11px] text-slate-400 pt-3 border-t border-slate-800/80 mt-2">
+            <div className="flex items-center justify-between text-[11px] text-ink-secondary pt-3 border-t border-border mt-2">
               <div className="flex items-center gap-2">
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-[3px] bg-sky-500/50 border border-sky-400/40 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-[3px] bg-heat-frozen border border-heat-frozen-border inline-block" />
                   <span>Frozen</span>
                 </span>
               </div>
 
               <div className="flex items-center gap-1.5">
                 <span>0%</span>
-                <span className="w-3 h-3 rounded-[3px] bg-slate-800 border border-slate-700 inline-block" title="0%" />
-                <span className="w-3 h-3 rounded-[3px] bg-emerald-950 border border-emerald-800/40 inline-block" title="1-39%" />
-                <span className="w-3 h-3 rounded-[3px] bg-emerald-800 inline-block" title="40-74%" />
-                <span className="w-3 h-3 rounded-[3px] bg-emerald-600 inline-block" title="75-99%" />
-                <span className="w-3 h-3 rounded-[3px] bg-emerald-400 inline-block" title="100%" />
+                <span className="w-3 h-3 rounded-[3px] bg-heat-0 border border-border inline-block" title="0%" />
+                <span className="w-3 h-3 rounded-[3px] bg-heat-1 inline-block" title="1-39%" />
+                <span className="w-3 h-3 rounded-[3px] bg-heat-2 inline-block" title="40-74%" />
+                <span className="w-3 h-3 rounded-[3px] bg-heat-3 inline-block" title="75-99%" />
+                <span className="w-3 h-3 rounded-[3px] bg-heat-4 inline-block" title="100%" />
                 <span>100%</span>
               </div>
             </div>
@@ -184,34 +192,34 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
         </div>
 
         {/* Period Comparisons (WoW & MoM) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-800/80">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-border">
           {/* Week over Week Card */}
-          <div className="p-3.5 rounded-2xl bg-slate-850 border border-slate-800 flex items-center justify-between">
+          <div className="p-3.5 rounded-2xl bg-bg-secondary border border-border flex items-center justify-between">
             <div className="space-y-0.5">
-              <span className="text-[11px] font-semibold text-slate-400 block">{wowComparison.currentPeriodLabel}</span>
+              <span className="text-[11px] font-semibold text-ink-secondary block">{wowComparison.currentPeriodLabel}</span>
               <div className="flex items-baseline gap-2">
-                <span className="text-sm font-bold text-white font-mono">
+                <span className="text-sm font-bold text-ink tabular-nums">
                   {wowComparison.currentHasData ? `${wowComparison.currentRate}%` : '—'}
                 </span>
-                <span className="text-[11px] text-slate-500 font-mono">
+                <span className="text-[11px] text-ink-muted tabular-nums">
                   prev {wowComparison.previousHasData ? `${wowComparison.previousRate}%` : '—'}
                 </span>
               </div>
-              <span className="text-[11px] text-slate-500">
+              <span className="text-[11px] text-ink-muted">
                 {wowComparison.currentCompleted} of {wowComparison.currentScheduled} scheduled check-ins
               </span>
             </div>
             <div
               title="Change in percentage points vs the equivalent days of last week (pp = percentage points, not a relative percent change)"
               aria-label={`Week over week change: ${wowComparison.rateDelta} percentage points`}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-mono font-bold ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold tabular-nums ${
                 !wowComparison.comparable
-                  ? 'bg-slate-800 text-slate-500 border border-slate-700'
+                  ? 'bg-neutral-bg text-ink-muted border border-border'
                   : wowComparison.rateDelta > 0
-                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                  ? 'bg-success-bg text-success border border-success-border'
                   : wowComparison.rateDelta < 0
-                  ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
-                  : 'bg-slate-800 text-slate-400 border border-slate-700'
+                  ? 'bg-error-bg text-error border border-error-border'
+                  : 'bg-neutral-bg text-ink-secondary border border-border'
               }`}
             >
               {!wowComparison.comparable ? (
@@ -228,32 +236,32 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
           </div>
 
           {/* Month over Month Card */}
-          <div className="p-3.5 rounded-2xl bg-slate-850 border border-slate-800 flex items-center justify-between">
+          <div className="p-3.5 rounded-2xl bg-bg-secondary border border-border flex items-center justify-between">
             <div className="space-y-0.5">
-              <span className="text-[11px] font-semibold text-slate-400 block">{momComparison.currentPeriodLabel}</span>
+              <span className="text-[11px] font-semibold text-ink-secondary block">{momComparison.currentPeriodLabel}</span>
               <div className="flex items-baseline gap-2">
-                <span className="text-sm font-bold text-white font-mono">
+                <span className="text-sm font-bold text-ink tabular-nums">
                   {momComparison.currentHasData ? `${momComparison.currentRate}%` : '—'}
                 </span>
-                <span className="text-[11px] text-slate-500 font-mono">
+                <span className="text-[11px] text-ink-muted tabular-nums">
                   prev {momComparison.previousHasData ? `${momComparison.previousRate}%` : '—'}
                 </span>
               </div>
-              <span className="text-[11px] text-slate-500">
+              <span className="text-[11px] text-ink-muted">
                 {momComparison.currentCompleted} of {momComparison.currentScheduled} scheduled check-ins
               </span>
             </div>
             <div
               title="Change in percentage points vs the equivalent days of last month (pp = percentage points, not a relative percent change)"
               aria-label={`Month over month change: ${momComparison.rateDelta} percentage points`}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-mono font-bold ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold tabular-nums ${
                 !momComparison.comparable
-                  ? 'bg-slate-800 text-slate-500 border border-slate-700'
+                  ? 'bg-neutral-bg text-ink-muted border border-border'
                   : momComparison.rateDelta > 0
-                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                  ? 'bg-success-bg text-success border border-success-border'
                   : momComparison.rateDelta < 0
-                  ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
-                  : 'bg-slate-800 text-slate-400 border border-slate-700'
+                  ? 'bg-error-bg text-error border border-error-border'
+                  : 'bg-neutral-bg text-ink-secondary border border-border'
               }`}
             >
               {!momComparison.comparable ? (
@@ -273,19 +281,19 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
         {/* Floating Tooltip */}
         {hoveredDay && tooltipPos && (
           <div
-            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs shadow-2xl text-white font-medium text-center"
+            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full px-3 py-1.5 rounded-xl bg-surface border border-border-strong text-xs shadow-dropdown text-ink font-medium text-center"
             style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }}
           >
-            <div className="font-semibold text-slate-200">
+            <div className="font-semibold text-ink">
               {formatDisplayDate(hoveredDay.date, { includeYear: true })}
             </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">
+            <div className="text-[11px] mt-0.5">
               {hoveredDay.isFrozen ? (
-                <span className="text-sky-300">Streak Frozen (Holiday Mode)</span>
+                <span className="text-info">Streak Frozen (Holiday Mode)</span>
               ) : hoveredDay.eligibleCount === 0 ? (
-                <span className="text-slate-400">Planned Rest Day</span>
+                <span className="text-ink-secondary">Planned Rest Day</span>
               ) : (
-                <span>
+                <span className="text-ink-secondary">
                   {hoveredDay.completedCount} of {hoveredDay.eligibleCount} completed ({hoveredDay.percentage}%)
                 </span>
               )}
@@ -295,34 +303,34 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
       </div>
 
       {/* Category Progress Analytics */}
-      <div className="p-4 sm:p-6 rounded-3xl bg-slate-900/90 border border-slate-800/80 shadow-sm space-y-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-surface border border-border shadow-card space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+            <div className="w-8 h-8 rounded-xl bg-info-bg border border-info-border flex items-center justify-center text-info">
               <BarChart3 className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white tracking-tight">Category Breakdown</h2>
+                <h2 className="text-base font-bold text-ink tracking-tight">Category Breakdown</h2>
                 {bestCategory && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[11px] font-semibold">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-warning-bg border border-warning-border text-warning text-[11px] font-semibold">
                     <Award className="w-3 h-3" />
                     <span>Best: {CATEGORIES[bestCategory.category].name}</span>
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-400">Completion consistency by habit category</p>
+              <p className="text-xs text-ink-secondary">Completion consistency by habit category</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {/* 7d vs 30d toggle */}
-            <div className="flex items-center gap-1 p-1 bg-slate-800/80 rounded-xl border border-slate-700/60">
+            <div className="flex items-center gap-1 p-1 bg-bg-secondary rounded-xl border border-border">
               <button
                 type="button"
                 onClick={() => setCategoryDays(7)}
                 className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${
-                  categoryDays === 7 ? 'bg-sky-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+                  categoryDays === 7 ? 'bg-forest text-white shadow-card' : 'text-ink-secondary hover:text-ink'
                 }`}
               >
                 7 Days
@@ -331,18 +339,18 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
                 type="button"
                 onClick={() => setCategoryDays(30)}
                 className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition cursor-pointer ${
-                  categoryDays === 30 ? 'bg-sky-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'
+                  categoryDays === 30 ? 'bg-forest text-white shadow-card' : 'text-ink-secondary hover:text-ink'
                 }`}
               >
                 30 Days
               </button>
             </div>
 
-            <div className="text-right pl-2 border-l border-slate-800" title="Weighted overall completion rate across all active habits for the selected window">
-              <span className="text-xs font-mono font-bold text-emerald-400 block">
+            <div className="text-right pl-2 border-l border-border" title="Weighted overall completion rate across all active habits for the selected window">
+              <span className="text-xs font-bold text-accent-text block tabular-nums">
                 {overall.hasData ? `${overall.rate}%` : '—'}
               </span>
-              <span className="text-[11px] text-slate-500">Overall</span>
+              <span className="text-[11px] text-ink-muted">Overall</span>
             </div>
           </div>
         </div>
@@ -354,26 +362,26 @@ export const HeatmapAnalytics: React.FC<HeatmapAnalyticsProps> = ({
             return (
               <div key={item.category} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-200 flex items-center gap-1.5">
-                    <span className={cat.color}>●</span>
+                  <span className="font-semibold text-ink flex items-center gap-1.5">
+                    <span className={CAT_DOT[item.category]}>●</span>
                     <span>{cat.name}</span>
-                    <span className="text-slate-500 font-normal">({item.activeCount} habits)</span>
+                    <span className="text-ink-muted font-normal">({item.activeCount} habits)</span>
                   </span>
-                  <span className="font-mono font-bold text-slate-300 tabular-nums">
-                    {item.scheduledCount > 0 ? `${item.completionRate}%` : <span className="text-slate-500 font-sans font-medium">No data</span>}
+                  <span className="font-bold text-ink tabular-nums">
+                    {item.scheduledCount > 0 ? `${item.completionRate}%` : <span className="text-ink-muted font-medium">No data</span>}
                   </span>
                 </div>
 
-                <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-bg-secondary overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-700 ease-out ${
                       item.completionRate >= 80
-                        ? 'bg-emerald-400'
+                        ? 'bg-success-fill'
                         : item.completionRate >= 50
-                        ? 'bg-emerald-500'
+                        ? 'bg-success'
                         : item.completionRate >= 20
-                        ? 'bg-amber-400'
-                        : 'bg-slate-600'
+                        ? 'bg-warning-fill'
+                        : 'bg-neutral-fill'
                     }`}
                     style={{ width: `${item.scheduledCount > 0 ? Math.max(item.completionRate, 3) : 0}%` }}
                   />
