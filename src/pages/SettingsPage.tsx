@@ -72,7 +72,7 @@ export const SettingsPage: React.FC = () => {
         <Row
           icon={<Download className="w-4 h-4" />}
           title="JSON Backup & Restore"
-          description="Export a full local snapshot or restore from a previously exported file."
+          description="Export your data or restore a previous backup."
           onClick={openBackupModal}
         />
       </section>
